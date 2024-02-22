@@ -1,7 +1,7 @@
 import LoginPage from "./LoginPage";
 import HomePage from "./HomePage";
 import CreateAccountPage from "./createAccountPage";
-import UserProfilePage from "./UserProfilePage";
+import UserVideosPage from "./userPages/UserVideosPage"
+import UserPage from "./userPages/UserPage";
 
-
-export {LoginPage,HomePage,CreateAccountPage, UserProfilePage}
+export {LoginPage,HomePage,CreateAccountPage, UserVideosPage, UserPage}

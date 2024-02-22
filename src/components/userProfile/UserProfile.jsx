@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react"
-import { GetAllUserVideos, ToggleSubscription } from "../index.js"
+import { useEffect, useState } from "react"
+import { ToggleSubscription } from "../index.js"
 import { getUserChannelProfile } from "../../services/userService.js"
 
 
@@ -9,19 +9,14 @@ function UserProfile({ username }) {
     const [loading, setLoading] = useState(false)
     const [isSubscribed, setIsSubscribed] = useState(false)
 
-    console.log("isSubscribed:",isSubscribed);
-
-
     useEffect(() => {
         ; (async () => {
             try {
                 setLoading(true)
                 const response = await getUserChannelProfile({ username })
-                console.log("response", response);
                 if (response) {
                     setUserProfile(response)
                     setIsSubscribed(response.data.isSubscribed)
-                    console.log("isSubscribedMongo",response.data.isSubscribed);
                 }
                 setLoading(false)
 
@@ -34,7 +29,7 @@ function UserProfile({ username }) {
     const handleSubscriptionChange = (newSubscriptionStatus) => {
         setIsSubscribed(newSubscriptionStatus);
     };
-  
+
     return !loading ? (
         <div>
             {
@@ -61,14 +56,13 @@ function UserProfile({ username }) {
                                     <div>{userProfile.data.channelSubscribedToCount} Subscriptions</div>
                                 </div>
 
-                               <div>
-                                <ToggleSubscription isSubscribed={isSubscribed} username={username} onSubscriptionChange={handleSubscriptionChange} />
-                               </div>
+                                <div>
+                                    <ToggleSubscription isSubscribed={isSubscribed} username={username} onSubscriptionChange={handleSubscriptionChange} />
+                                </div>
 
 
                             </div>
                         </div>
-                        <GetAllUserVideos username={username} />
                     </div>)
             }
             {

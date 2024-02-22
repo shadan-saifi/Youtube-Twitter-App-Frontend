@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { getAllUserVideos } from "../../services/videoService"
+import { getAllUserVideos, getUserSearchedVideos } from "../../services/videoService"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 import Pagination from "../pagination/Pagination"
+import { useSearchParams } from 'react-router-dom';
 
-
-function GetAllUserVideos({ username }) {
+function GetUserSearchedVideos({ username }) {
+    const [searchParams,_] = useSearchParams();
+    const query=searchParams.get("q")
+    console.log("query",query);
 
     const [allVideos, setAllVideos] = useState("")
     const [error, setError] = useState("")
@@ -83,7 +86,8 @@ function GetAllUserVideos({ username }) {
         ; (async () => {
             try {
                 setLoading(true)
-                const response = await getAllUserVideos({ ...watchFields(), page: currentPage, username })
+                const response = await getUserSearchedVideos({ ...watchFields(), page: currentPage, username, query })
+                console.log("response of user videos",response);
                 if (response) {
                     setTotalVideoCount(response?.data?.totalVideos)
                     setVideoPerPage(response?.data?.videosOnPage)
@@ -96,7 +100,7 @@ function GetAllUserVideos({ username }) {
                 setLoading(false)
             }
         })()
-    }, [username, currentPage, watchFields().sortBy, watchFields().sortType, watchFields().limit]);
+    }, [username, currentPage,query, watchFields().sortBy, watchFields().sortType, watchFields().limit]);
 
     return !loading ? (
         <div>
@@ -211,4 +215,6 @@ function GetAllUserVideos({ username }) {
     ) : (<div>...Loading</div>)
 }
 
-export default GetAllUserVideos
+
+
+export default GetUserSearchedVideos;

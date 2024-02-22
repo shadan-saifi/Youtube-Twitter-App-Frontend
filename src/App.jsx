@@ -42,7 +42,7 @@ function App() {
       }
     };
 
-    const interval = setInterval(refresh, 60000);
+    const interval = setInterval(refresh, 3600000);
 
     return () => clearInterval(interval);
   }, [dispatch]);

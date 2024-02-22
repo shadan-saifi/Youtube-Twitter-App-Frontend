@@ -10,7 +10,6 @@ function ToggleSubscription({ isSubscribed, username, onSubscriptionChange }) {
 
     const authStatus = useSelector((state) => state.auth.status);
     const user = useSelector((state) => state.auth.userData);
-    console.log("user", user);
     const [error, setError] = useState("");
 
     const handleSubscription = async () => {

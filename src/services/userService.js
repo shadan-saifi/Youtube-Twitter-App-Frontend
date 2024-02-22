@@ -54,7 +54,7 @@ async function getCurrentUser() {
         } else return null
 
     } catch (error) {
-        return null
+        throw error
     }
 }
 

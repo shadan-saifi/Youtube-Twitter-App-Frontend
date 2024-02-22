@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { useState } from "react";
-import { loginUser } from "../services/userService"
+import { getCurrentUser, loginUser } from "../services/userService"
 import { login as authlogin } from "../store/authSlice";
 import Logo from "./Logo.jsx";
 import InputBox from "./InputBox";
@@ -19,21 +19,23 @@ function Login() {
         try {
             const {emailOrUsername, password}=data;
             const isEmail= /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailOrUsername)
-            console.log("isEmail",isEmail);
-            const userData = await loginUser({
+            const session = await loginUser({
                 [isEmail?"email":"username"]:emailOrUsername,password
             })
 
-            if (userData) {
-                dispatch(authlogin(userData))
-                navigate("/")
-            }else if(userData.error){
-                setError(userData.error)
+            if (session) {
+                const userData = await getCurrentUser();
+                if (userData) {
+                  dispatch(authlogin({ userData }));
+                  navigate("/")
+                } 
+            }else if(session?.error){
+                setError(session?.error)
             }
            
 
         } catch (error) {
-            setError(error.response.data.message)
+            setError(error?.response?.data?.message)
         }
     }
 
