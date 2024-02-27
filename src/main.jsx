@@ -5,7 +5,7 @@ import './index.css'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { CreateAccountPage, HomePage, LoginPage, UserPage, UserVideosPage } from './pages/index.js'
+import { CreateAccountPage, HomePage, LoginPage, UserPage, UserVideosPage, VideoByIdPage } from './pages/index.js'
 import { AuthLayout } from './components/index.js'
 import UserSearchPage from './pages/userPages/UserSearchPage.jsx'
 
@@ -31,6 +31,12 @@ const router = createBrowserRouter([
         </AuthLayout>)
       },
       {
+        path: "/watch",
+        element: (<AuthLayout authorization={true}>
+          <VideoByIdPage />
+        </AuthLayout>)
+      },
+      {
         path: "/:username",
         element: (<AuthLayout authorization={true}>
           <UserPage />
@@ -45,7 +51,7 @@ const router = createBrowserRouter([
           {
             path: "/:username/search",
             element: (<AuthLayout authorization={true}>
-              <UserSearchPage/>
+              <UserSearchPage />
             </AuthLayout>)
           },
         ]

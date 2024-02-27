@@ -10,9 +10,10 @@ import Footer from "./footer/Footer";
 import GetAllUserVideos from "./videos/GetAllUserVideos.jsx";
 import UserProfile from "./userProfile/userProfile.jsx";
 import Pagination from "./pagination/Pagination.jsx";
-import  ToggleSubscription  from "./userProfile/ToggleSubscription.jsx";
+import ToggleSubscription  from "./userProfile/ToggleSubscription.jsx";
 import InputSearch from "./videos/InputSearch.jsx";
-import GetUserSearchedVideos from "./videos/GetUserSearchedVideos.jsx";
+import VideoById from "./videos/VideoById.jsx";
+
 
 export { Header,Footer, Container, AuthLayout, Button, InputBox, Login, Select, CreateAccount, GetAllUserVideos, UserProfile, Pagination, ToggleSubscription,
-InputSearch, GetUserSearchedVideos }
+InputSearch, VideoById }

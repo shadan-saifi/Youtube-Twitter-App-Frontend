@@ -18,10 +18,12 @@ function InputSearch({username,className=""}) {
             <InputBox
               type="search"
                 placeholder="Search the channel videos"
+                autoCorrect="off"
+                spellCheck="false"
                 value={query}
                 onChange={(e)=>setQuery(e.target.value)}
                 onKeyDown={handleSearch}
-                className="text-black outline-none border-blue-700 w-full sm:max-w-36 md:max-w-72 "
+                className={`text-black outline-none border-blue-700 w-full sm:max-w-36 md:max-w-72 ${className}`}
             />
         </div>
     );

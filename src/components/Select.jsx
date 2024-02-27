@@ -6,7 +6,7 @@ function Select({options,label,className,...props},ref){
 
     return(
         <div>
-            {label && <label htmlFor={id} className=" font-semibold text-lg pb-1 text-blue-500">{label}</label>}
+            {label && <label htmlFor={id} >{label}</label>}
             <select id={id} className={`${className} px-3`} ref={ref} {...props}>
               {
                   options?.map((option)=>(

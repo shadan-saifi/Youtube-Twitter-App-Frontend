@@ -41,7 +41,7 @@ function UserPage() {
                             {item.name}
                         </NavLink>
                     ))}
-                    <InputSearch username={username} className="absolute"/>
+                    <InputSearch username={username} className=""/>
                 </nav>
             </div>
             <Outlet/>

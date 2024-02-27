@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { getAllUserVideos } from "../../services/videoService"
+import { useCallback, useEffect, useState } from "react"
+import { getAllUserVideos, getUserSearchedVideos } from "../../services/videoService"
 import { useForm } from "react-hook-form"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 import Pagination from "../pagination/Pagination"
+import { useSelector } from "react-redux"
+import Select from "../Select"
 
 
 function GetAllUserVideos({ username }) {
@@ -15,7 +17,21 @@ function GetAllUserVideos({ username }) {
     const [totalVideoCount, setTotalVideoCount] = useState("")
     const siblingCount = 1;
     const [loading, setLoading] = useState(false)
-    const { register, formState: { errors }, handleSubmit, watch } = useForm();
+    const { register, formState: { errors }, handleSubmit, watch } = useForm({
+        defaultValues: {
+            sortBy: "title",
+            sortType: "asc",
+            limit: 4,
+            isPublished: true
+        }
+    });
+
+    const authStatus = useSelector((state) => state.auth.status);
+    const user = useSelector((state) => state.auth.userData);
+
+    const [searchParams, _] = useSearchParams();
+    const query = searchParams.get("q")
+
 
     const handlePageChange = (page) => {
         setCurrentPage(page)
@@ -76,14 +92,26 @@ function GetAllUserVideos({ username }) {
         return {
             sortBy: watch("sortBy"),
             sortType: watch("sortType"),
-            limit: watch("limit")
+            limit: watch("limit"),
+            isPublished: watch("isPublished")
         };
     }, [watch]);
+    // console.log("isPublished value:", watch("isPublished"));
+
+
     useEffect(() => {
         ; (async () => {
             try {
                 setLoading(true)
-                const response = await getAllUserVideos({ ...watchFields(), page: currentPage, username })
+                let response
+                if (query) {
+                    response = await getUserSearchedVideos({ ...watchFields(), page: currentPage, username, query })
+                    console.log("query response:", response);
+                } else {
+                    response = await getAllUserVideos({ ...watchFields(), page: currentPage, username })
+                    console.log("all videos response:", response);
+
+                }
                 if (response) {
                     setTotalVideoCount(response?.data?.totalVideos)
                     setVideoPerPage(response?.data?.videosOnPage)
@@ -96,14 +124,14 @@ function GetAllUserVideos({ username }) {
                 setLoading(false)
             }
         })()
-    }, [username, currentPage, watchFields().sortBy, watchFields().sortType, watchFields().limit]);
+    }, [username, currentPage, query, watchFields().sortBy, watchFields().sortType, watchFields().limit, watchFields().isPublished]);
 
     return !loading ? (
         <div>
             <form onSubmit={handleSubmit(() => { })}
                 className="flex sm:flex-row flex-col sm:justify-between justify-center sm:items-center shadow-md p-3 mb-3" >
                 <label htmlFor="sortBy" >Sort By:</label>
-                <select id="sortBy" defaultValue="title"
+                <select id="sortBy"
                     className="border focus:border-red-400 "
                     {
                     ...register("sortBy", {
@@ -125,7 +153,7 @@ function GetAllUserVideos({ username }) {
                 }
 
                 <label htmlFor="sortType">Sort Type:</label>
-                <select id="sortType" defaultValue="asc"
+                <select id="sortType"
                     className="border focus:border-red-400"
                     {
                     ...register("sortType", {
@@ -143,8 +171,7 @@ function GetAllUserVideos({ username }) {
                     </ul>
                 }
 
-                <label htmlFor="limit">Videos Per Page:</label>
-                <select id="limit" defaultValue="4"
+                <Select label="Videos Per Page:" options={[1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 40, 50]}
                     className="border focus:border-red-400"
 
                     {
@@ -152,23 +179,36 @@ function GetAllUserVideos({ username }) {
                         required: "This field is required",
                     })
                     }
-                    aria-invalid={errors.limit ? "true" : "false"}
-                >
-                    <option value="1" >1</option>
-                    <option value="2" >2</option>
-                    <option value="4" >4</option>
-                    <option value="6">6</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                    <option value="50">50</option>
-                </select>
+                    aria-invalid={errors.limit ? "true" : "false"} />
                 {
                     errors.limit && <ul>
                         {errors.limit?.type === "required" && <li role="alert">{errors.limit?.message}</li>}
                     </ul>
+                }
+
+                {authStatus && user.data.username === username &&
+                    <div>
+                        <label htmlFor="isPublish">Publication status:</label>
+                        <select id="isPublish"
+                            className="border focus:border-red-400"
+
+                            {
+                            ...register("isPublished", {
+                                required: "This field is required",
+                            })
+                            }
+                            aria-invalid={errors.isPublished ? "true" : "false"}
+                        >
+                            <option value={true}>Published</option>
+                            <option value={false}>Unpublished</option>
+
+                        </select>
+                        {
+                            errors.isPublished && <ul>
+                                {errors.isPublished?.type === "required" && <li role="alert">{errors.isPublished?.message}</li>}
+                            </ul>
+                        }
+                    </div>
                 }
 
             </form>
@@ -178,7 +218,9 @@ function GetAllUserVideos({ username }) {
                 {allVideos && allVideos.data.videos && allVideos.data.videos.length !== 0 ?
                     (allVideos.data.videos.map((videoDetails) => (
                         <div key={videoDetails._id} className="max-w-72">
-                            <Link to={`/videos/${videoDetails._id}`}>
+
+                            <Link to={`/watch?v=${encodeURIComponent(videoDetails._id)}`}>
+                                
                                 <div className="relative">
                                     <img src={videoDetails.thumbnail.url} alt={videoDetails.title}
                                         className="rounded-2xl"

@@ -1,6 +1,6 @@
 import React from 'react';
-import { GetUserSearchedVideos } from '../../components';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { GetAllUserVideos } from '../../components';
+import { useParams } from 'react-router-dom';
 
 function UserSearchPage(props) {
     const { username } = useParams()
@@ -8,7 +8,7 @@ function UserSearchPage(props) {
 
     return (
         <div>
-            <GetUserSearchedVideos username={username}/>
+            <GetAllUserVideos username={username}/>
         </div>
     );
 }

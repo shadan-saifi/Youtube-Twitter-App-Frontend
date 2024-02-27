@@ -29,7 +29,7 @@ async function publishVideo({ title, description, videoFile, thumbnail }) {
         throw error
     }
 }
-async function getAllUserVideos({ page, limit, sortBy, sortType, username }) {
+async function getAllUserVideos({ page, limit, sortBy, sortType,isPublished, username }) {
     try {
         const response = await axios.get("/api/v1/videos", {
             params: {
@@ -37,6 +37,7 @@ async function getAllUserVideos({ page, limit, sortBy, sortType, username }) {
                 limit,
                 sortBy,
                 sortType,
+                isPublished,
                 username
             }
         })
@@ -88,16 +89,17 @@ async function togglePublishVideo({ videoId }) {
     }
 }
 
-async function getUserSearchedVideos({ page, limit, sortBy, sortType, query, username }) {
+async function getUserSearchedVideos({ page, limit, sortBy, sortType,isPublished, username, query, }) {
     try {
         const response = await axios.get("/api/v1/videos/search-videos", {
             params: {
                 page,
                 limit,
-                query,
                 sortBy,
                 sortType,
-                username
+                isPublished,
+                username,
+                query
             }
         })
         return handleResponse(response)
@@ -106,4 +108,5 @@ async function getUserSearchedVideos({ page, limit, sortBy, sortType, query, use
         throw error
     }
 }
+
 export { publishVideo, getAllUserVideos, getVideoById, updateVideo, deleteVideo, togglePublishVideo, getUserSearchedVideos }
