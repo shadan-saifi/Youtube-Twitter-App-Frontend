@@ -4,7 +4,7 @@ import Container from "../containers/Container"
 import Logo from "../Logo";
 import LogoutBtn from "./LogoutButton.jsx";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 
 function Header() {
@@ -12,11 +12,26 @@ function Header() {
     const authStatus = useSelector((state) => state.auth.status)
     const user = useSelector((state) => state.auth.userData)
     const [userDropdown, setUserDropdown] = useState(false)
-
+    const dropdownRef=useRef(null)
     const handleUserDropdown = () => {
         setUserDropdown(!userDropdown)
     }
-
+    useEffect(() => {
+        const closeDropdown = (event) => {
+          if (
+            dropdownRef.current &&
+            !dropdownRef.current.contains(event.target)
+          ) {
+            setUserDropdown(false);
+          }
+        };
+    
+        document.addEventListener("mousedown", closeDropdown);
+    
+        return () => {
+          document.removeEventListener("mousedown", closeDropdown);
+        };
+      }, []);
     const navItems = [
         {
             name: "Home",
@@ -70,14 +85,14 @@ function Header() {
                     {
                         authStatus && (
                             <button onClick={handleUserDropdown} className="focus:outline-none">
-                                <img src={user?.data?.avatar?.url} alt="Avatar" className="h-24 w-24 rounded-full" />
+                                <img src={user?.data?.avatar?.url} alt="Avatar" className="object-cover aspect-square md:max-w-16 sm:max-w-12 max-w-12 rounded-full" />
                             </button>
                         )
                     }
 
                 </nav>
             </Container>
-            <div className="relative">
+            <div className="relative" ref={dropdownRef} onClick={handleUserDropdown}>
                 {
                     authStatus && userDropdown && (
                         <ul className="z-10 flex flex-col justify-between items-center absolute right-0 top-0 bg-blue-300 rounded-md p-4 shadow ">

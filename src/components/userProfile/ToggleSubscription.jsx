@@ -43,7 +43,7 @@ function ToggleSubscription({ isSubscribed, username, onSubscriptionChange }) {
                         <Button  className=" text-white bg-blue-500 hover:bg-blue-600 hover:border active:scale-95 rounded-lg w-full max-w-64">Edit</Button>
                     </Link>
                     <Link to="/manage-videos">
-                        <Button  className="text-white bg-blue-500 hover:bg-blue-600 hover:border active:scale-95 rounded-lg w-full max-w-64">Manage Videos</Button>
+                        <Button  className="text-white bg-blue-500 hover:bg-blue-600 hover:border active:scale-95 rounded-lg w-full max-w-64 h-[40px]">Manage Videos</Button>
                     </Link>
                 </div>
             )}

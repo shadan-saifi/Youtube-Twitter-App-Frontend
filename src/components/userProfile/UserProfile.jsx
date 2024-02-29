@@ -40,10 +40,10 @@ function UserProfile({ username }) {
                             <img src={userProfile.data.coverImage.url} alt="Cover Image"
                                 className="object-cover w-full h-full" />
                         </div>
-                        <div className=" m-3 flex flex-row justify-start">
+                        <div className=" m-3 flex flex-row justify-start items-center">
 
                             <img src={userProfile.data.avatar.url} alt="Avatar image"
-                                className="object-cover aspect-square md:max-w-64 sm:max-w-48 max-w-36 rounded-full p-2 mt-2" />
+                                className="object-cover aspect-square rounded-full md:max-w-64 sm:max-w-48 max-w-36 p-2 mt-2" />
 
                             <div className="flex flex-col justify-start items-start">
                                 <div className="text-5xl capitalize font-bold text-red-600">{userProfile.data.fullname}</div>

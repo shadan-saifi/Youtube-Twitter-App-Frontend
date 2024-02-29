@@ -13,7 +13,7 @@ import Pagination from "./pagination/Pagination.jsx";
 import ToggleSubscription  from "./userProfile/ToggleSubscription.jsx";
 import InputSearch from "./videos/InputSearch.jsx";
 import VideoById from "./videos/VideoById.jsx";
-
+import VideoJS from "./videos/VideoJS.jsx";
 
 export { Header,Footer, Container, AuthLayout, Button, InputBox, Login, Select, CreateAccount, GetAllUserVideos, UserProfile, Pagination, ToggleSubscription,
-InputSearch, VideoById }
+InputSearch, VideoById, VideoJS }
