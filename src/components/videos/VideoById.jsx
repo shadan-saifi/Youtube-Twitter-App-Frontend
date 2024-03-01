@@ -6,36 +6,8 @@ import 'video.js/dist/video-js.css';
 import VideoJS from './VideoJS';
 
 
-function VideoById(props) {
-    const [video, setVideo] = useState(null)
-    const [error, setError] = useState("")
-    const [loading, setLoading] = useState(false)
+function VideoById({video}) {
     const videoRef = useRef(null)
-
-    const [searchParams, _] = useSearchParams();
-    const videoId = searchParams.get("v")
-
-
-    useEffect(() => {
-        if (videoId) {
-            (async () => {
-                try {
-                    setLoading(true);
-                    const videoData = await getVideoById({ videoId });
-                    if (videoData?.data) {
-                        setVideo(videoData?.data);
-                    } else {
-                        setError("Video not found");
-                    }
-                } catch (error) {
-                    setError(error.response?.data?.message || "An error occurred while fetching the video");
-                } finally {
-                    setLoading(false);
-                }
-            })();
-        }
-    }, [videoId]);
-    console.log("video:", video);
 
     const playerRef = React.useRef(null);
 
@@ -83,16 +55,11 @@ function VideoById(props) {
         });
     };
 
-    return !loading ? (
+    return (
         <div className='max-h-[480px] aspect-video mt-10 ' >
             <VideoJS options={videoJsOptions} onReady={handlePlayerReady}  />
-
-            {/* <video src={video?.videoFile?.secure_url} type="video/*" poster={video?.thumbnail?.secure_url} controls loop autoPlay playsInline
-                ref={videoRef} className="video-js" >
-                {video?.title}
-            </video> */}
         </div>
-    ) : (<div>...Loading</div>)
+    ) 
 }
 
 export default VideoById;

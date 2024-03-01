@@ -14,6 +14,10 @@ import ToggleSubscription  from "./userProfile/ToggleSubscription.jsx";
 import InputSearch from "./videos/InputSearch.jsx";
 import VideoById from "./videos/VideoById.jsx";
 import VideoJS from "./videos/VideoJS.jsx";
+import VideoDetails from "./videos/VideoDetails.jsx";
+import VideoDescription from "./videos/VideoDescription.jsx";
+import VideoComments from "./videos/VideoComments.jsx";
+import ToggleLike from "./likes/ToggleLike.jsx";
 
 export { Header,Footer, Container, AuthLayout, Button, InputBox, Login, Select, CreateAccount, GetAllUserVideos, UserProfile, Pagination, ToggleSubscription,
-InputSearch, VideoById, VideoJS }
+InputSearch, VideoById, VideoJS, VideoComments, VideoDescription,VideoDetails, ToggleLike }
