@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { VideoById, VideoDetails } from '../../components';
+import { VideoById, VideoDescription, VideoDetails } from '../../components';
 import { useSearchParams } from 'react-router-dom';
 import { getVideoById } from '../../services/videoService';
 function VideoByIdPage(props) {
 
     const [video, setVideo] = useState(null)
-    const [isSubscribed, setIsSubscribed] = useState(false)
 
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
@@ -15,14 +14,14 @@ function VideoByIdPage(props) {
 
 
     useEffect(() => {
-        if (videoId) {
-            (async () => {
+        ; (async () => {
+            if (videoId) {
+
                 try {
                     setLoading(true);
                     const videoData = await getVideoById({ videoId });
                     if (videoData?.data) {
                         setVideo(videoData?.data);
-                        setIsSubscribed(videoData?.data?.isSubscribed)
                     } else {
                         setError("Video not found");
                     }
@@ -31,8 +30,9 @@ function VideoByIdPage(props) {
                 } finally {
                     setLoading(false);
                 }
-            })();
+            };
         }
+        )();
     }, [videoId]);
     console.log("video:", video);
 
@@ -44,7 +44,10 @@ function VideoByIdPage(props) {
                         <VideoById video={video} />
                     </div>
                     <div>
-                        <VideoDetails video={video} isSubscribed={isSubscribed} setIsSubscribed={setIsSubscribed} />
+                        <VideoDetails videoId={videoId} />
+                    </div>
+                    <div>
+                        <VideoDescription video={video}/>
                     </div>
                 </div>
 

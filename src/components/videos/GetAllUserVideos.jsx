@@ -246,8 +246,7 @@ function GetAllUserVideos({ username }) {
                     siblingCount={siblingCount}
                     currentPage={currentPage}
                     pageSize={videoPerPage}
-                />
-                }
+                />}
             </div>
         </div>
     ) : (<div>...Loading</div>)

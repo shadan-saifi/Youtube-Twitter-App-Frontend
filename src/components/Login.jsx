@@ -17,6 +17,7 @@ function Login() {
 
     const login = async (data) => {
         try {
+            setError("")
             const {emailOrUsername, password}=data;
             const isEmail= /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailOrUsername)
             const session = await loginUser({

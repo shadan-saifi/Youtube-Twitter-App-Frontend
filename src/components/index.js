@@ -16,8 +16,8 @@ import VideoById from "./videos/VideoById.jsx";
 import VideoJS from "./videos/VideoJS.jsx";
 import VideoDetails from "./videos/VideoDetails.jsx";
 import VideoDescription from "./videos/VideoDescription.jsx";
-import VideoComments from "./videos/VideoComments.jsx";
+import GetVideoComments from "./videos/GetVideoComments.jsx";
 import ToggleLike from "./likes/ToggleLike.jsx";
 
 export { Header,Footer, Container, AuthLayout, Button, InputBox, Login, Select, CreateAccount, GetAllUserVideos, UserProfile, Pagination, ToggleSubscription,
-InputSearch, VideoById, VideoJS, VideoComments, VideoDescription,VideoDetails, ToggleLike }
+InputSearch, VideoById, VideoJS, GetVideoComments, VideoDescription,VideoDetails, ToggleLike }
