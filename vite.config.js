@@ -6,7 +6,7 @@ export default defineConfig({
   server:{
    proxy:{
     // '/api': 'http://localhost:8000'
-    "/api": "https://you-tube-twitter-app.vercel.app"
+    "/api": https://you-tube-twitter-app.vercel.app
    },
   //  port: 8000,
   },
