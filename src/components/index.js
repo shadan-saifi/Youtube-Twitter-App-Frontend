@@ -8,7 +8,7 @@ import Select from "./Select";
 import CreateAccount from "./CreateAccount";
 import Footer from "./footer/Footer";
 import GetAllUserVideos from "./videos/GetAllUserVideos.jsx";
-import UserProfile from "./userProfile/userProfile.jsx";
+import UserProfile from "./userProfile/UserProfile.jsx";
 import Pagination from "./pagination/Pagination.jsx";
 import ToggleSubscription  from "./userProfile/ToggleSubscription.jsx";
 import InputSearch from "./videos/InputSearch.jsx";
