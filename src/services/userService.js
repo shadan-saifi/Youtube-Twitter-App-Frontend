@@ -36,7 +36,7 @@ async function createAccount({ fullname, username, password, email, avatar, cove
 
 async function loginUser({ email, username, password }) {
     try {
-        const response = await axios.post("https://you-tube-twitter-app.vercel.app/v1/users/login", JSON.stringify({
+        const response = await axios.post("/api/v1/users/login", JSON.stringify({
             email, username, password
         }))
         const data =await handleResponse(response)
