@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const api = axios.create({
-    baseURL: `${DOMAIN}/api/v1/users`,
+    baseURL: `${process.env.DOMAIN}/api/v1/users`,
     headers: {
       "Content-Type": "application/json",
     },
