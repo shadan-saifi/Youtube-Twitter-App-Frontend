@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const api = axios.create({
-    baseURL: `https://you-tube-twitter-app.vercel.app/api/v1/users`,
+    baseURL: `${import.meta.env.DOMAIN}/api/v1/users`,
     headers: {
       "Content-Type": "application/json",
     },
