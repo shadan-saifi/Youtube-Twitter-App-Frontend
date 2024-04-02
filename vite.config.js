@@ -10,10 +10,10 @@ export default defineConfig({
     sourcemap: true,
     target: 'esnext'
   },
-  server:{
-   proxy:{
-    '/api': 'http://localhost:8000'
-   },
-  //  port: 8000,
-  },
+  // server:{
+  //  proxy:{
+  //   '/api': 'http://localhost:8000'
+  //  },
+  // //  port: 8000,
+  // },
 })
