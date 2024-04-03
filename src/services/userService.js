@@ -21,7 +21,7 @@ async function createAccount({ fullname, username, password, email, avatar, cove
         formData.append("avatar", avatar[0]); 
         if(coverImage) formData.append("coverImage", coverImage[0]);
   
-        const response = await api.post("/register", formData, {
+        const response = await axios.post("/register", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -37,7 +37,7 @@ async function createAccount({ fullname, username, password, email, avatar, cove
 
 async function loginUser({ email, username, password }) {
     try {
-        const response = await api.post("/login", JSON.stringify({
+        const response = await axios.post("/login", JSON.stringify({
             email, username, password
         }))
         const data =await handleResponse(response)
@@ -49,7 +49,7 @@ async function loginUser({ email, username, password }) {
 
 async function getCurrentUser() {
     try {
-        const response = await api.get("/current-user")
+        const response = await axios.get("/current-user")
         if (response.status >= 200 && response.status < 300) {
             return response.data
         } else return null
@@ -61,7 +61,7 @@ async function getCurrentUser() {
 
 async function logoutUser() {
     try {
-        const response = await api.post("/logout")
+        const response = await axios.post("/logout")
         const data = await handleResponse(response)
         return data
     } catch (error) {
@@ -72,7 +72,7 @@ async function logoutUser() {
 
 async function refreshAccessToken(){
     try {
-        const response=await api.post("/refresh-token")
+        const response=await axios.post("/refresh-token")
         if (response.status >= 200 && response.status < 300) {
             return response.data
         } else return null
@@ -83,7 +83,7 @@ async function refreshAccessToken(){
 
 async function getUserChannelProfile({username}){
     try {
-        const response=await api.get(`/c/${username}`)
+        const response=await axios.get(`/c/${username}`)
         return await handleResponse(response)
     } catch (error) {
         throw error
