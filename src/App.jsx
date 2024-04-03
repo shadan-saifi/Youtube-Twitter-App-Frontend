@@ -16,6 +16,7 @@ function App() {
     (async () => {
       try {
         const userData = await getCurrentUser();
+        console.log("userData:",userData);
         if (userData) {
           dispatch(login({ userData }));
         } else {
