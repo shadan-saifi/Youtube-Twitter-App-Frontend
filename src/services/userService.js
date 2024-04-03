@@ -1,8 +1,8 @@
 import axios from "axios"
 
-const domain=import.meta.env.DOMAIN
+
 const api = axios.create({
-    baseURL: `${domain}/api/v1/users`,
+    baseURL: `${import.meta.env.DOMAIN}/api/v1/users`,
     headers: {
       "Content-Type": "application/json",
     },
