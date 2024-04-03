@@ -17,7 +17,7 @@ function App() {
       try {
         const userData = await getCurrentUser();
         console.log("userData:",userData);
-        if (userData) {
+        if (userData.data) {
           dispatch(login({ userData }));
         } else {
           dispatch(logout());
