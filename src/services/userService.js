@@ -1,12 +1,7 @@
 import axios from "axios"
 
-
-const api = axios.create({
-    baseURL: `${import.meta.env.DOMAIN}/api/v1/users`,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+axios.defaults.baseURL =  `${import.meta.env.DOMAIN}/api/v1/users`;
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 async function handleResponse(response) {
     if (response.status >= 200 && response.status < 300) {
