@@ -1,6 +1,9 @@
 import axios from "axios"
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
+axios.defaults.baseURL =  `${import.meta.env.VITE_API_URL}`;
+axios.defaults.withCredentials=true
+
 
 async function handleResponse(response) {
     if (response.status >= 200 && response.status < 300) {
@@ -37,8 +40,7 @@ async function createAccount({ fullname, username, password, email, avatar, cove
 async function loginUser({ email, username, password }) {
     try {
         const response = await axios.post("/api/v1/users/login", JSON.stringify({
-            email, username, password
-        }))
+            email, username, password}))
         const data =await handleResponse(response)
         return data
     } catch (error) {

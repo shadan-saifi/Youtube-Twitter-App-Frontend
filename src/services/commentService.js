@@ -1,6 +1,9 @@
 import axios from 'axios';
 import React from 'react';
 
+axios.defaults.headers.post["Content-Type"] = "application/json";
+axios.defaults.baseURL =  `${import.meta.env.VITE_API_URL}`;
+
 async function handleResponse(response) {
     if (response.status >= 200 && response.status < 300) {
         return response.data;

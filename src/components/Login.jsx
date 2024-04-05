@@ -23,10 +23,11 @@ function Login() {
             const session = await loginUser({
                 [isEmail?"email":"username"]:emailOrUsername,password
             })
-
-            if (session) {
+             console.log("login Details:",session);
+            if (session?.data) {
                 const userData = await getCurrentUser();
-                if (userData) {
+                console.log("userData",userData);
+                if (userData.data) {
                   dispatch(authlogin({ userData }));
                   navigate("/")
                 } 
