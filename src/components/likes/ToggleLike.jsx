@@ -41,8 +41,6 @@ function ToggleLike({ videoId }) {
         }
     }, [videoId, video, user, likeActionPerformed]); 
     
-
-
     const handleLike = async () => {
         try {
             setError("");
