@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { getVideoById } from '../../services/videoService';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import VideoJS from './VideoJS';
 
 
-function VideoById({video}) {
+function VideoById({ video }) {
     const videoRef = useRef(null)
 
     const playerRef = React.useRef(null);
@@ -28,7 +26,7 @@ function VideoById({video}) {
         userActions: {
             hotkeys: true
         },
-      
+
         controlBar: {
             skipButtons: {
                 forward: 10,
@@ -57,9 +55,9 @@ function VideoById({video}) {
 
     return (
         <div className='max-h-[480px] aspect-video mt-10 ' >
-            <VideoJS options={videoJsOptions} onReady={handlePlayerReady}  />
+            <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
         </div>
-    ) 
+    )
 }
 
 export default VideoById;

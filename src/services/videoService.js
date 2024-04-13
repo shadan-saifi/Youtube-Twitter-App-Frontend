@@ -1,7 +1,7 @@
 import axios from "axios"
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
-axios.defaults.baseURL =  `${import.meta.env.VITE_API_URL}`;
+axios.defaults.baseURL = `${import.meta.env.VITE_API_URL}`;
 
 async function handleResponse(response) {
     if (response.status >= 200 && response.status < 300) {
@@ -30,7 +30,7 @@ async function publishVideo({ title, description, videoFile, thumbnail }) {
         throw error
     }
 }
-async function getAllUserVideos({ page, limit, sortBy, sortType,isPublished, username }) {
+async function getAllUserVideos({ page, limit, sortBy, sortType, isPublished, username }) {
     try {
         const response = await axios.get("/api/v1/videos", {
             params: {
@@ -46,6 +46,23 @@ async function getAllUserVideos({ page, limit, sortBy, sortType,isPublished, use
 
     } catch (error) {
         console.log("Error while getting all user Video", error);
+        throw error
+    }
+}
+async function getAllVideos({ page, limit, sortBy, sortType }) {
+    try {
+        const response = await axios.get("/api/v1/videos/all-videos", {
+            params: {
+                page,
+                limit,
+                sortBy,
+                sortType,
+            }
+        })
+        return handleResponse(response)
+
+    } catch (error) {
+        console.log("Error while getting all Video", error);
         throw error
     }
 }
@@ -90,9 +107,9 @@ async function togglePublishVideo({ videoId }) {
     }
 }
 
-async function getUserSearchedVideos({ page, limit, sortBy, sortType,isPublished, username, query, }) {
+async function getUserSearchedVideos({ page, limit, sortBy, sortType, isPublished, username, query, }) {
     try {
-        const response = await axios.get("/api/v1/videos/search-videos", {
+        const response = await axios.get("/api/v1/videos/user-search-videos", {
             params: {
                 page,
                 limit,
@@ -110,4 +127,32 @@ async function getUserSearchedVideos({ page, limit, sortBy, sortType,isPublished
     }
 }
 
-export { publishVideo, getAllUserVideos, getVideoById, updateVideo, deleteVideo, togglePublishVideo, getUserSearchedVideos }
+async function getSearchedVideos({ page, limit, sortBy, sortType, query, }) {
+    try {
+        const response = await axios.get("/api/v1/videos/search-videos", {
+            params: {
+                page,
+                limit,
+                sortBy,
+                sortType,
+                query
+            }
+        })
+        return handleResponse(response)
+    } catch (error) {
+        console.log("Error while getting seached Video", error);
+        throw error
+    }
+}
+
+export {
+    publishVideo,
+    getAllUserVideos,
+    getVideoById,
+    updateVideo,
+    deleteVideo,
+    togglePublishVideo,
+    getUserSearchedVideos,
+    getAllVideos,
+    getSearchedVideos
+}

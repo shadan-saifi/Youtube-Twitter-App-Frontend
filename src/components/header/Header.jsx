@@ -5,33 +5,47 @@ import Logo from "../Logo";
 import LogoutBtn from "./LogoutButton.jsx";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import InputBox from "../InputBox.jsx";
 
 
 function Header() {
+
+    const [userDropdown, setUserDropdown] = useState(false)
+    const [query, setQuery] = useState("")
     const navigate = useNavigate()
+
     const authStatus = useSelector((state) => state.auth.status)
     const user = useSelector((state) => state.auth.userData)
-    const [userDropdown, setUserDropdown] = useState(false)
-    const dropdownRef=useRef(null)
+    const dropdownRef = useRef(null)
+
+    const handleSearch = (e) => {
+        if (query.trim()!=="") {
+          navigate(`/search?q=${encodeURIComponent(query)}`);
+        }
+      };
+    const handleKeyDown=(e)=>{
+        if (e.key === 'Enter')
+            handleSearch()
+    }  
     const handleUserDropdown = () => {
         setUserDropdown(!userDropdown)
     }
     useEffect(() => {
         const closeDropdown = (event) => {
-          if (
-            dropdownRef.current &&
-            !dropdownRef.current.contains(event.target)
-          ) {
-            setUserDropdown(false);
-          }
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
+                setUserDropdown(false);
+            }
         };
-    
+
         document.addEventListener("mousedown", closeDropdown);
-    
+
         return () => {
-          document.removeEventListener("mousedown", closeDropdown);
+            document.removeEventListener("mousedown", closeDropdown);
         };
-      }, []);
+    }, []);
     const navItems = [
         {
             name: "Home",
@@ -40,8 +54,6 @@ function Header() {
         },
         {
             name: "Search",
-            to: "/search-video",
-            active: authStatus
         },
         {
             name: "Login",
@@ -69,13 +81,23 @@ function Header() {
                         {
                             navItems.map((item) => (
                                 <li key={item.name} >
-                                    {item.active && (
+                                    {item.active && item.name !== "Search" && (
                                         <button onClick={() => navigate(item.to)}>{item.name}</button>
                                     )}
-                                    {item.active && item.name === "Search" && (
-                                        <button key={item.name} className="grow hidden sm:flex ">
-                                            <input type="text" className="border"  /> {item.name}
-                                        </button>
+                                    {item.name === "Search" && (
+                                        <div className="divide-x divide-gray-500  border rounded border-gray-500 grow hidden sm:flex flex-row justify-center items-center ">
+                                            <InputBox
+                                                type="search"
+                                                placeholder="Search the channel videos"
+                                                autoCorrect="off"
+                                                spellCheck="false"
+                                                value={query}
+                                                onChange={(e) => setQuery(e.target.value)}
+                                                onKeyDown={handleKeyDown}
+                                                className={`text-black outline-none border-none `}
+                                            />
+                                            <button className=" px-2 py-1 " onClick={handleSearch}>{item.name}</button>
+                                        </div>
                                     )}
                                 </li>
                             ))

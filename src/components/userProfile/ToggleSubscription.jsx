@@ -25,7 +25,7 @@ function ToggleSubscription({ isSubscribed, username, onSubscriptionChange }) {
 
     return (
         <div>
-            {authStatus && user.data.username !== username && (
+            {authStatus && user?.data?.username !== username && (
                 <button className={`active:scale-95 active:border w-32 py-2 mt-6 rounded-2xl text-white font-semibold ${isSubscribed ? " bg-blue-500 hover:bg-blue-400" : " bg-red-500 hover:bg-red-400"}`}
                     onClick={handleSubscription}
                 >

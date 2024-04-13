@@ -5,9 +5,9 @@ import './index.css'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { CreateAccountPage, HomePage, LoginPage, UserPage, UserVideosPage, VideoByIdPage } from './pages/index.js'
+import { CreateAccountPage, GetPlaylistPage, HomeVideoPage, LoginPage, UserPage, UserPlaylistPage, UserSearchVideosPage, UserVideosPage, VideoByIdPage } from './pages/index.js'
 import { AuthLayout } from './components/index.js'
-import UserSearchPage from './pages/userPages/UserSearchPage.jsx'
+import GetAllUserPlaylists from './components/playlist/GetAllUserPlaylists.jsx'
 
 const router = createBrowserRouter([
   {
@@ -16,7 +16,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <HomePage />
+        element: <HomeVideoPage />
+      },
+      {
+        path: "/search",
+        element: <HomeVideoPage />
       },
       {
         path: "/login",
@@ -31,29 +35,42 @@ const router = createBrowserRouter([
         </AuthLayout>)
       },
       {
+        path: "/playlist",
+        element: (<AuthLayout authorization={false}>
+          <GetPlaylistPage />
+        </AuthLayout>)
+      },
+      {
         path: "/watch",
-        element: (<AuthLayout authorization={true}>
+        element: (<AuthLayout authorization={false}>
           <VideoByIdPage />
         </AuthLayout>)
       },
       {
         path: "/:username",
-        element: (<AuthLayout authorization={true}>
+        element: (<AuthLayout authorization={false}>
           <UserPage />
         </AuthLayout>),
         children: [
           {
             path: "/:username/videos",
-            element: (<AuthLayout authorization={true}>
+            element: (<AuthLayout authorization={false}>
               <UserVideosPage />
             </AuthLayout>)
           },
           {
-            path: "/:username/search",
-            element: (<AuthLayout authorization={true}>
-              <UserSearchPage />
+            path: "/:username/playlists",
+            element: (<AuthLayout authorization={false}>
+              <UserPlaylistPage />
             </AuthLayout>)
           },
+          {
+            path: "/:username/search",
+            element: (<AuthLayout authorization={false}>
+              <UserSearchVideosPage />
+            </AuthLayout>)
+          },
+        
         ]
       }
     ]

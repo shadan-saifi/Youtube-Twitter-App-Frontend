@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useState } from "react"
-import { getAllUserVideos, getUserSearchedVideos } from "../../services/videoService"
+import { getAllUserVideos, getAllVideos, getSearchedVideos, getUserSearchedVideos } from "../../services/videoService"
 import { useForm } from "react-hook-form"
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom"
 import Pagination from "../pagination/Pagination"
 import { useSelector } from "react-redux"
 import Select from "../Select"
+import handleViews from "../../hooks/handleViews"
+import handleUploadDate from "../../hooks/handleUploadDate"
+import handleDuration from "../../hooks/handleDuration"
 
 
-function GetAllUserVideos({ username }) {
+function GetVideos({ username = null }) {
 
     const [allVideos, setAllVideos] = useState("")
     const [error, setError] = useState("")
@@ -17,6 +20,8 @@ function GetAllUserVideos({ username }) {
     const [totalVideoCount, setTotalVideoCount] = useState("")
     const siblingCount = 1;
     const [loading, setLoading] = useState(false)
+
+    const navigate = useNavigate()
     const { register, formState: { errors }, handleSubmit, watch } = useForm({
         defaultValues: {
             sortBy: "title",
@@ -32,61 +37,9 @@ function GetAllUserVideos({ username }) {
     const [searchParams, _] = useSearchParams();
     const query = searchParams.get("q")
 
-
     const handlePageChange = (page) => {
         setCurrentPage(page)
     }
-    const handleDuration = (time) => {
-        const h = Math.floor(time / 3600)
-        const m = Math.floor((time % 3600) / 60)
-        const s = Math.floor(time % 60)
-
-        const formattedHour = h < 10 ? "0" + h : h;
-        const formattedMinute = m < 10 ? "0" + m : m;
-        const formattedSecond = s < 10 ? "0" + s : s;
-        let formattedTime = formattedHour + ":" + formattedMinute + ":" + formattedSecond;
-        return formattedTime
-    }
-
-    const handleUploadDate = (createdAt) => {
-        const currentDate = new Date();
-        const createdAtDate = new Date(createdAt);
-
-        const timeDifferenceInSeconds = Math.floor((currentDate - createdAtDate) / 1000);
-
-        if (timeDifferenceInSeconds < 60) {
-            return `${timeDifferenceInSeconds} second${timeDifferenceInSeconds !== 1 ? 's' : ''} ago`;
-        } else if (timeDifferenceInSeconds < 3600) {
-            const minutes = Math.floor(timeDifferenceInSeconds / 60);
-            return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
-        } else if (timeDifferenceInSeconds < 86400) {
-            const hours = Math.floor(timeDifferenceInSeconds / 3600);
-            return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
-        } else if (timeDifferenceInSeconds < 2592000) {
-            const days = Math.floor(timeDifferenceInSeconds / 86400);
-            return `${days} day${days !== 1 ? 's' : ''} ago`;
-        } else if (timeDifferenceInSeconds < 31536000) {
-            const months = Math.floor(timeDifferenceInSeconds / 2592000);
-            return `${months} month${months !== 1 ? 's' : ''} ago`;
-        } else {
-            const years = Math.floor(timeDifferenceInSeconds / 31536000);
-            return `${years} year${years !== 1 ? 's' : ''} ago`;
-        }
-    };
-
-
-    const handleViews = (views) => {
-        if (views < 1000) {
-            return `${views} view${views !== 1 ? "s" : ""}`
-        } else if (views >= 1000 && views < 100000) {
-            return `${Math.floor(views / 1000)}k views`
-        } else if (views >= 100000 && views < 10000000) {
-            return `${Math.floor(views / 100000)}lakh views`
-        } else {
-            return `${Math.floor(views / 10000000)}crore views`
-        }
-    }
-
 
     const watchFields = useCallback(() => {
         return {
@@ -96,22 +49,29 @@ function GetAllUserVideos({ username }) {
             isPublished: watch("isPublished")
         };
     }, [watch]);
-    // console.log("isPublished value:", watch("isPublished"));
-
 
     useEffect(() => {
         ; (async () => {
             try {
                 setLoading(true)
                 let response
-                if (query) {
-                    response = await getUserSearchedVideos({ ...watchFields(), page: currentPage, username, query })
-                    console.log("query response:", response);
-                } else {
-                    response = await getAllUserVideos({ ...watchFields(), page: currentPage, username })
-                    console.log("all videos response:", response);
+                if (username !== null) {
+                    if (query) {
+                        response = await getUserSearchedVideos({ ...watchFields(), page: currentPage, username, query })
+                        console.log("query response:", response);
+                    } else {
+                        response = await getAllUserVideos({ ...watchFields(), page: currentPage, username })
+                        console.log("all videos response:", response);
 
+                    }
+                } else if (username === null) {
+                    if (query) {
+                        response = await getSearchedVideos({ ...watchFields(), page: currentPage, query })
+                    } else {
+                        response = await getAllVideos({ ...watchFields(), page: currentPage })
+                    }
                 }
+                console.log("Response of videos:", response);
                 if (response) {
                     setTotalVideoCount(response?.data?.totalVideos)
                     setVideoPerPage(response?.data?.videosOnPage)
@@ -129,7 +89,7 @@ function GetAllUserVideos({ username }) {
     return !loading ? (
         <div>
             <form onSubmit={handleSubmit(() => { })}
-                className="flex sm:flex-row flex-col sm:justify-between justify-center sm:items-center shadow-md p-3 mb-3" >
+                className={`${username===null?`bg-gray-50 mt-8 rounded-xl`:null} flex sm:flex-row flex-col sm:justify-between justify-center sm:items-center shadow-md p-3 mb-3`} >
                 <label htmlFor="sortBy" >Sort By:</label>
                 <select id="sortBy"
                     className="border focus:border-red-400 "
@@ -186,7 +146,7 @@ function GetAllUserVideos({ username }) {
                     </ul>
                 }
 
-                {authStatus && user.data.username === username &&
+                {authStatus && username !== null && user.data.username === username &&
                     <div>
                         <label htmlFor="isPublish">Publication status:</label>
                         <select id="isPublish"
@@ -214,26 +174,45 @@ function GetAllUserVideos({ username }) {
             </form>
             {error && <p className="text-red-600 m-3 p-3 text-center">{error}</p>}
 
-            <div className=" grid grid-flow-row sm:grid-cols-2 md:grid-cols-4 grid-cols-1 gap-4">
-                {allVideos && allVideos.data.videos && allVideos.data.videos.length !== 0 ?
-                    (allVideos.data.videos.map((videoDetails) => (
-                        <div key={videoDetails._id} className="max-w-72">
+            <div className=" grid grid-flow-row sm:grid-cols-2 md:grid-cols-4 grid-cols-1 gap-4 my-16">
+                {allVideos && allVideos?.data?.videos && allVideos?.data?.videos?.length !== 0 ?
+                    (allVideos?.data?.videos?.map((videoDetails) => (
+                        <div key={videoDetails?._id} className="max-w-72 hover:scale-[1.01] ">
+                            <Link to={`/watch?v=${encodeURIComponent(videoDetails?._id)}`}>
 
-                            <Link to={`/watch?v=${encodeURIComponent(videoDetails._id)}`}>
-                                
                                 <div className="relative">
-                                    <img src={videoDetails.thumbnail.url} alt={videoDetails.title}
+                                    <img src={videoDetails?.thumbnail?.url} alt={videoDetails?.title}
                                         className="rounded-2xl"
                                     />
                                     <span className="absolute right-3 bottom-1 text-lg text-white px-1  bg-gray-600 bg-opacity-70 rounded-md">
-                                        {handleDuration(videoDetails.duration)}</span>
-                                </div>
-                                <div className="font-semibold text-lg text-left px-1 pt-1">{videoDetails.title}</div>
-                                <div className="px-1 pb-2 flex flex-row justify-between items-center">
-                                    <div>{handleViews(videoDetails.views)}</div>
-                                    <div>{handleUploadDate(videoDetails.createdAt)}</div>
+                                        {handleDuration(videoDetails?.duration)}</span>
                                 </div>
                             </Link>
+                            <div className="px-1 pb-2 flex flex-row justify-start items-center">
+                                {
+                                    username === null ? (
+                                        <div className="active:scale-95" onClick={() => navigate(`/${videoDetails?.ownerOfVideo?.username}/videos`)}>
+                                            <img src={videoDetails?.ownerOfVideo?.avatar?.secure_url} alt="avatar image"
+                                                className="object-cover sm:size-10 md:size-12 size-8 rounded-full " />
+                                        </div>
+                                    ) : null
+                                }
+                                <div className="grow">
+                                    <div className="font-semibold text-lg text-left px-2 pt-2">{videoDetails?.title}</div>
+                                    {
+                                        username === null ? (
+                                            <div onClick={() => navigate(`/${videoDetails?.ownerOfVideo?.username}/videos`)}>
+                                                <div className=" text-md text-left px-2 hover:bg-slate-100 rounded">{videoDetails?.ownerOfVideo?.fullname}</div>
+                                            </div>
+                                        ) : null
+                                    }
+                                    <div className="px-2 pb-2 flex flex-row justify-between items-center w-full">
+                                        <div>{handleViews(videoDetails?.views)}</div>
+                                        <div>{handleUploadDate(videoDetails?.createdAt)}</div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>))
                     ) : (<div>{allVideos.message || "No videos to show"}</div>)
                 }
@@ -252,4 +231,4 @@ function GetAllUserVideos({ username }) {
     ) : (<div>...Loading</div>)
 }
 
-export default GetAllUserVideos
+export default GetVideos

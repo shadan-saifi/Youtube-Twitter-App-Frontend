@@ -1,7 +1,21 @@
 import LoginPage from "./LoginPage";
-import HomePage from "./HomePage";
-import CreateAccountPage from "./CreateAccountPage";
-import UserVideosPage from "./userPages/UserVideosPage"
-import UserPage from "./userPages/UserPage";
 import VideoByIdPage from "./videoPages/VideoByIdPage";
-export {LoginPage,HomePage,CreateAccountPage, UserVideosPage, UserPage, VideoByIdPage}
+import UserSearchVideosPage from "./userPages/UserSearchVideosPage.jsx";
+import HomeVideoPage from "./homePages/HomeVideoPage";
+import CreateAccountPage from "./CreateAccountPage.jsx"
+import UserPage from "./userPages/UserPage.jsx"
+import UserVideosPage from "./userPages/UserVideosPage.jsx"
+import UserPlaylistPage from "./userPages/UserPlaylistsPage.jsx";
+import GetPlaylistPage from "./playlistPages/GetPlaylistPage.jsx";
+
+
+export {LoginPage,
+    HomeVideoPage,
+    CreateAccountPage, 
+    UserVideosPage, 
+    UserPage, 
+    VideoByIdPage,
+    UserSearchVideosPage,
+    UserPlaylistPage,
+    GetPlaylistPage
+}
