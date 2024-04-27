@@ -11,13 +11,14 @@ async function handleResponse(response) {
     }
 }
 
-async function publishVideo({ title, description, videoFile, thumbnail }) {
+async function publishVideo({ title, description,isPublished, videoFile, thumbnail }) {
     try {
         const formData = new FormData()
         formData.append("title", title)
         formData.append("description", description)
-        formData.append("videoFile", videoFile)
-        formData.append("thumbnail", thumbnail)
+        formData.append("isPublished", isPublished)
+        formData.append("videoFile", videoFile[0])
+        formData.append("thumbnail", thumbnail[0])
 
         const response = await axios.post("/api/v1/videos", formData, {
             headers: {
@@ -77,9 +78,18 @@ async function getVideoById({ videoId }) {
     }
 }
 
-async function updateVideo({ videoId }) {
+async function updateVideo({ title, description,isPublished,videoId, thumbnail }) {
     try {
-        const response = await axios.patch(`/api/v1/videos/${videoId}`)
+        const formData = new FormData()
+        formData.append("title", title)
+        formData.append("description", description)
+        formData.append("isPublished", isPublished)
+        formData.append("thumbnail", thumbnail[0])
+        const response = await axios.patch(`/api/v1/videos/${videoId}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        })
         return handleResponse(response)
     } catch (error) {
         console.log("Error while updating Video", error);

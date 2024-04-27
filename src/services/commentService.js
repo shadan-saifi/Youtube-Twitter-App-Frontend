@@ -38,9 +38,14 @@ async function updateComment({commentId, content}) {
     }
 }
 
-async function getVideoComments({videoId}) {
+async function getVideoComments({ videoId, skip, limit }) {
     try {
-        const response = await axios.get(`/api/v1/comments/v/${videoId}`)
+        const response = await axios.get(`/api/v1/comments/v/${videoId}`,{
+            params:{
+                skip,
+                limit
+            }
+        })
         const data =await handleResponse(response)
         console.log('Backend Response.data:', data);
         return data

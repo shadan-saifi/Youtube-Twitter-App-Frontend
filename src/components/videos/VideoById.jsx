@@ -10,7 +10,7 @@ function VideoById({ video }) {
     const playerRef = React.useRef(null);
 
     const videoJsOptions = {
-        autoplay: true,
+        autoplay: false,
         controls: true,
         responsive: true,
         fluid: true,
@@ -26,12 +26,11 @@ function VideoById({ video }) {
         userActions: {
             hotkeys: true
         },
-
         controlBar: {
             skipButtons: {
                 forward: 10,
                 backward: 10
-            }
+            },
         },
         poster: video?.thumbnail?.secure_url,
         sources: [{
@@ -54,7 +53,7 @@ function VideoById({ video }) {
     };
 
     return (
-        <div className='max-h-[480px] aspect-video mt-10 ' >
+        <div className='h-full aspect-video mt-10 ' >
             <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
         </div>
     )

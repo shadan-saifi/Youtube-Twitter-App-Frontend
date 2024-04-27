@@ -67,11 +67,13 @@ function GetVideos({ username = null }) {
                 } else if (username === null) {
                     if (query) {
                         response = await getSearchedVideos({ ...watchFields(), page: currentPage, query })
+                        console.log("null user qury video response:", response);
+
                     } else {
                         response = await getAllVideos({ ...watchFields(), page: currentPage })
+                        console.log("null user all video response:", response);
                     }
                 }
-                console.log("Response of videos:", response);
                 if (response) {
                     setTotalVideoCount(response?.data?.totalVideos)
                     setVideoPerPage(response?.data?.videosOnPage)
@@ -80,7 +82,7 @@ function GetVideos({ username = null }) {
                 }
 
             } catch (error) {
-                setError(error.response?.data?.message || "An error occurred");
+                setError(error.response?.data?.message || "An error occurred while displaying all videos");
                 setLoading(false)
             }
         })()
@@ -89,47 +91,51 @@ function GetVideos({ username = null }) {
     return !loading ? (
         <div>
             <form onSubmit={handleSubmit(() => { })}
-                className={`${username===null?`bg-gray-50 mt-8 rounded-xl`:null} flex sm:flex-row flex-col sm:justify-between justify-center sm:items-center shadow-md p-3 mb-3`} >
-                <label htmlFor="sortBy" >Sort By:</label>
-                <select id="sortBy"
-                    className="border focus:border-red-400 "
+                className={`${username === null ? `bg-gray-50 mt-8 rounded-xl` : null} flex sm:flex-row flex-col sm:justify-end justify-center sm:items-center shadow-md p-3 mb-3 sm:space-x-4 space-y-2`} >
+                <div>
+                    <label htmlFor="sortBy" >Sort By:</label>
+                    <select id="sortBy"
+                        className="border focus:border-red-400 "
+                        {
+                        ...register("sortBy", {
+                            required: "This field is required",
+                        })
+                        }
+                        aria-invalid={errors.sortBy ? "true" : "false"}
+                    >
+                        <option value="title" >Title</option>
+                        <option value="description">Description</option>
+                        <option value="duration">Duration</option>
+                        <option value="views">Views</option>
+                        <option value="createdAt">Upload Date</option>
+                    </select>
                     {
-                    ...register("sortBy", {
-                        required: "This field is required",
-                    })
+                        errors.sortBy && <ul>
+                            {errors.sortBy?.type === "required" && <li role="alert">{errors.sortBy?.message}</li>}
+                        </ul>
                     }
-                    aria-invalid={errors.sortBy ? "true" : "false"}
-                >
-                    <option value="title" >Title</option>
-                    <option value="description">Description</option>
-                    <option value="duration">Duration</option>
-                    <option value="views">Views</option>
-                    <option value="createdAt">Upload Date</option>
-                </select>
-                {
-                    errors.sortBy && <ul>
-                        {errors.sortBy?.type === "required" && <li role="alert">{errors.sortBy?.message}</li>}
-                    </ul>
-                }
+                </div>
 
-                <label htmlFor="sortType">Sort Type:</label>
-                <select id="sortType"
-                    className="border focus:border-red-400"
+                <div>
+                    <label htmlFor="sortType">Sort Type:</label>
+                    <select id="sortType"
+                        className="border focus:border-red-400"
+                        {
+                        ...register("sortType", {
+                            required: "This field is required",
+                        })
+                        }
+                        aria-invalid={errors.sortType ? "true" : "false"}
+                    >
+                        <option value="asc" >Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
                     {
-                    ...register("sortType", {
-                        required: "This field is required",
-                    })
+                        errors.sortType && <ul>
+                            {errors.sortType?.type === "required" && <li role="alert">{errors.sortType?.message}</li>}
+                        </ul>
                     }
-                    aria-invalid={errors.sortType ? "true" : "false"}
-                >
-                    <option value="asc" >Ascending</option>
-                    <option value="desc">Descending</option>
-                </select>
-                {
-                    errors.sortType && <ul>
-                        {errors.sortType?.type === "required" && <li role="alert">{errors.sortType?.message}</li>}
-                    </ul>
-                }
+                </div>
 
                 <Select label="Videos Per Page:" options={[1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 40, 50]}
                     className="border focus:border-red-400"
@@ -146,7 +152,7 @@ function GetVideos({ username = null }) {
                     </ul>
                 }
 
-                {authStatus && username !== null && user.data.username === username &&
+                {authStatus && username !== null && user?.data?.username === username &&
                     <div>
                         <label htmlFor="isPublish">Publication status:</label>
                         <select id="isPublish"

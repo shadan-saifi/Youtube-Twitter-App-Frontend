@@ -32,14 +32,18 @@ function VideoDetails({ videoId }) {
         })()
     }, [videoId, isSubscribed]);
 
+    console.log("video detail:",video);
+
     const handleSubscriptionChange = (newSubscriptionStatus) => {
         setIsSubscribed(newSubscriptionStatus);
     };
 
     return !loading ? (
         error ? <p className="text-red-600 m-3 p-3 text-center">{error}</p>
-            : (
-                <div className='md:my-4 my-1 max-w-[850px] flex flex-row justify-between items-center'>
+            : (                  
+              <div className='flex flex-col justify-center items-start'>
+                  <div className=' text-3xl font-bold pt-1'>{video?.title}</div>
+                  <div className='md:my-4 my-1 max-w-[850px] flex flex-row justify-between items-center w-full'>
                     <Link to={`/${video?.owner?.username}`} className='flex flex-row justify-center items-center'>
                         <img src={video?.owner?.avatar?.secure_url} alt="avatar image"
                             className="object-cover aspect-square md:max-w-16 sm:max-w-12 max-w-12 rounded-full" />
@@ -55,6 +59,7 @@ function VideoDetails({ videoId }) {
                         <ToggleLike videoId={videoId} />
                     </div>
                 </div>
+              </div>
 
             )
     ) : (<div>...Loading</div>)

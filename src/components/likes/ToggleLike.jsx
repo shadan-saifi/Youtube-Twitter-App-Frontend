@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { toggleVideoLike } from '../../services/likeService';
 import { getVideoById } from '../../services/videoService';
 import { useSelector } from 'react-redux';
+import handleLikeCount from '../../hooks/handleLikeCount';
 
 function ToggleLike({ videoId }) {
-    const [error, setError] = useState("")
     const [video, setVideo] = useState("")
     const [isLiked, setIsLiked] = useState("")
     const [likeActionPerformed, setLikeActionPerformed] = useState(false); // Flag state
@@ -22,11 +22,9 @@ function ToggleLike({ videoId }) {
                         setVideo(videoData?.data);
                     } else {
                         console.log("error while fetching video details");
-                        setError("error");
                     }
                 } catch (error) {
                     console.log(error.response?.data?.message);
-                    setError( "error ");
                 }
             }
         })()
@@ -39,11 +37,10 @@ function ToggleLike({ videoId }) {
             console.log("isLikedByCurrentUser:", isLikedByCurrentUser);
             setIsLiked(isLikedByCurrentUser);
         }
-    }, [videoId, video, user, likeActionPerformed]); 
+    }, [video, likeActionPerformed]); 
     
     const handleLike = async () => {
         try {
-            setError("");
             const response = await toggleVideoLike({ videoId });
             console.log("response of togglemliek:", response);
             setIsLiked(response?.message === "video liked successfully")
@@ -51,29 +48,14 @@ function ToggleLike({ videoId }) {
 
         } catch (error) {
             console.log(error.response?.data?.message || "An error occurred");
-            setError("error");
         }
     };
   
-    const handleLikeCount = useMemo(() => {
-        return (count) => {
-            console.log("count of like", count);
-            if (count < 1000) {
-                return `${count} like${count !== 1 ? "s" : ""}`;
-            } else if (count >= 1000 && count < 100000) {
-                return `${Math.floor(count / 1000)}k likes`;
-            } else if (count >= 100000 && count < 10000000) {
-                return `${Math.floor(count / 100000)}lakh likes`;
-            } else {
-                return `${Math.floor(count / 10000000)}crore likes`;
-            }
-        };
-    }, []);
+  
     console.log("isLiked:", isLiked);
 
     return (
         <div>
-            {error && <p className="text-red-600 m-3 p-3 text-center">{error}</p>}
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className={`h-6 w-6 cursor-pointer ${isLiked ? 'text-red-600 fill-red-600' : 'text-gray-500 fill-none'}  hover:text-red-900 active:scale-95`}

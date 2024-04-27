@@ -1,8 +1,8 @@
 import axios from "axios"
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
-axios.defaults.baseURL =  `${import.meta.env.VITE_API_URL}`;
-axios.defaults.withCredentials=true
+axios.defaults.baseURL = `${import.meta.env.VITE_API_URL}`;
+axios.defaults.withCredentials = true
 
 
 async function handleResponse(response) {
@@ -20,16 +20,16 @@ async function createAccount({ fullname, username, password, email, avatar, cove
         formData.append("email", email);
         formData.append("username", username);
         formData.append("password", password);
-        formData.append("avatar", avatar[0]); 
-        if(coverImage) formData.append("coverImage", coverImage[0]);
-  
-        const response = await axios.post("/register", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+        formData.append("avatar", avatar[0]);
+        if (coverImage) formData.append("coverImage", coverImage[0]);
+
+        const response = await axios.post("/api/v1/users/register", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
         });
 
-        const data =await handleResponse(response)
+        const data = await handleResponse(response)
         return data
     } catch (error) {
         console.log("Error while creating account", error);
@@ -40,8 +40,9 @@ async function createAccount({ fullname, username, password, email, avatar, cove
 async function loginUser({ email, username, password }) {
     try {
         const response = await axios.post("/api/v1/users/login", JSON.stringify({
-            email, username, password}))
-        const data =await handleResponse(response)
+            email, username, password
+        }))
+        const data = await handleResponse(response)
         return data
     } catch (error) {
         throw error
@@ -50,7 +51,7 @@ async function loginUser({ email, username, password }) {
 
 async function getCurrentUser() {
     try {
-        const response = await axios.get("/current-user")
+        const response = await axios.get("/api/v1/users/current-user")
         if (response.status >= 200 && response.status < 300) {
             return response.data
         } else return null
@@ -62,7 +63,7 @@ async function getCurrentUser() {
 
 async function logoutUser() {
     try {
-        const response = await axios.post("/logout")
+        const response = await axios.post("/api/v1/users/logout")
         const data = await handleResponse(response)
         return data
     } catch (error) {
@@ -71,9 +72,9 @@ async function logoutUser() {
     }
 }
 
-async function refreshAccessToken(){
+async function refreshAccessToken() {
     try {
-        const response=await axios.post("/refresh-token")
+        const response = await axios.post("/api/v1/users/refresh-token")
         if (response.status >= 200 && response.status < 300) {
             return response.data
         } else return null
@@ -82,9 +83,9 @@ async function refreshAccessToken(){
     }
 }
 
-async function getUserChannelProfile({username}){
+async function getUserChannelProfile({ username }) {
     try {
-        const response=await axios.get(`/c/${username}`)
+        const response = await axios.get(`/api/v1/users/c/${username}`)
         return await handleResponse(response)
     } catch (error) {
         throw error

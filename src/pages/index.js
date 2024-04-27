@@ -7,7 +7,8 @@ import UserPage from "./userPages/UserPage.jsx"
 import UserVideosPage from "./userPages/UserVideosPage.jsx"
 import UserPlaylistPage from "./userPages/UserPlaylistsPage.jsx";
 import GetPlaylistPage from "./playlistPages/GetPlaylistPage.jsx";
-
+import UploadAndEditVideoPage from "./uploadPages/UploadAndEditVideoPage.jsx";
+import DashboardPage from "./dashboardPages/DashboardPage.jsx";
 
 export {LoginPage,
     HomeVideoPage,
@@ -17,5 +18,7 @@ export {LoginPage,
     VideoByIdPage,
     UserSearchVideosPage,
     UserPlaylistPage,
-    GetPlaylistPage
+    GetPlaylistPage,
+    UploadAndEditVideoPage,
+    DashboardPage
 }

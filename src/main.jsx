@@ -5,9 +5,10 @@ import './index.css'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { CreateAccountPage, GetPlaylistPage, HomeVideoPage, LoginPage, UserPage, UserPlaylistPage, UserSearchVideosPage, UserVideosPage, VideoByIdPage } from './pages/index.js'
+import { CreateAccountPage, DashboardPage, GetPlaylistPage, HomeVideoPage, LoginPage, UploadAndEditVideoPage,  UserPage, UserPlaylistPage, UserSearchVideosPage, UserVideosPage, VideoByIdPage } from './pages/index.js'
 import { AuthLayout } from './components/index.js'
-import GetAllUserPlaylists from './components/playlist/GetAllUserPlaylists.jsx'
+import GetChannnelVideosPage from './pages/dashboardPages/GetChannnelVideosPage.jsx'
+import GetDashboardStatsPage from './pages/dashboardPages/GetDashboardStatsPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -30,47 +31,57 @@ const router = createBrowserRouter([
       },
       {
         path: "/create-account",
-        element: (<AuthLayout authorization={false}>
-          <CreateAccountPage />
-        </AuthLayout>)
+        element: <CreateAccountPage />
       },
       {
         path: "/playlist",
-        element: (<AuthLayout authorization={false}>
-          <GetPlaylistPage />
-        </AuthLayout>)
+        element: <GetPlaylistPage />
       },
       {
         path: "/watch",
-        element: (<AuthLayout authorization={false}>
-          <VideoByIdPage />
-        </AuthLayout>)
+        element: <VideoByIdPage />
       },
       {
         path: "/:username",
-        element: (<AuthLayout authorization={false}>
-          <UserPage />
-        </AuthLayout>),
+        element: <UserPage />
+        ,
         children: [
           {
             path: "/:username/videos",
-            element: (<AuthLayout authorization={false}>
+            element:
               <UserVideosPage />
-            </AuthLayout>)
           },
           {
             path: "/:username/playlists",
-            element: (<AuthLayout authorization={false}>
-              <UserPlaylistPage />
-            </AuthLayout>)
+            element: <UserPlaylistPage />
           },
           {
             path: "/:username/search",
-            element: (<AuthLayout authorization={false}>
-              <UserSearchVideosPage />
-            </AuthLayout>)
+            element: <UserSearchVideosPage />
           },
-        
+
+        ]
+      },
+      {
+        path: "/channel",
+        element: (<AuthLayout authorization={true} ><DashboardPage /></AuthLayout>),
+        children: [
+          {
+            path: "/channel/uploadvideo",
+            element: (<AuthLayout authorization={true} ><UploadAndEditVideoPage /></AuthLayout>),
+          },
+          {
+            path: "/channel/dashboard",
+            element: (<AuthLayout authorization={true} ><GetDashboardStatsPage /></AuthLayout>),
+          },
+          {
+            path: "/channel/videos",
+            element: (<AuthLayout authorization={true} ><GetChannnelVideosPage /></AuthLayout>),
+          },
+          {
+            path: "/channel/:videoId/editvideo",
+            element: (<AuthLayout authorization={true} ><UploadAndEditVideoPage /></AuthLayout>),
+          }, 
         ]
       }
     ]

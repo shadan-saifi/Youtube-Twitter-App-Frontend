@@ -77,7 +77,7 @@ function CreateAccount() {
                             message: 'Username should not exceed 16 characters'
                         }
                     })}
-                    aria-invalid={errors.password ? "true" : "false"}
+                    aria-invalid={errors.username ? "true" : "false"}
                 />
                 {
                     errors.password && <ul>
@@ -101,7 +101,7 @@ function CreateAccount() {
                         },
 
                     })}
-                    aria-invalid={errors.password ? "true" : "false"}
+                    aria-invalid={errors.email ? "true" : "false"}
                 />
                 {
                     errors.password && <ul>
@@ -160,7 +160,7 @@ function CreateAccount() {
 
                     })
                     }
-                    aria-invalid={errors.password ? "true" : "false"}
+                    aria-invalid={errors.avatar ? "true" : "false"}
                 />
                 {
                     errors.avatar && <ul>
@@ -169,7 +169,7 @@ function CreateAccount() {
                     </ul>
                 }
                 <InputBox
-                    label="Cover Image(max-size:20MB):"
+                    label="Cover Image(max-size:10MB):"
                     type="file"
                     alt="Cover Image"
                     accept="image/*"
@@ -177,8 +177,8 @@ function CreateAccount() {
                     ...register("coverImage", {
                         validate: {
                             size: (file) => {
-                                const maxSize = 20 * 1024 * 1024
-                                if (file[0]?.size > maxSize) return "File size exceeds the maximum allowed limit of 20MB";
+                                const maxSize = 10 * 1024 * 1024
+                                if (file[0]?.size > maxSize) return "File size exceeds the maximum allowed limit of 10MB";
 
                                 else return true
                             },
@@ -186,7 +186,7 @@ function CreateAccount() {
 
                     })
                     }
-                    aria-invalid={errors.password ? "true" : "false"}
+                    aria-invalid={errors.coverImage ? "true" : "false"}
                 />
                 {
                     errors.coverImage && <ul>

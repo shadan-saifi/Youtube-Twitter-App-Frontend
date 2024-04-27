@@ -10,33 +10,46 @@ import InputBox from "../InputBox.jsx";
 
 function Header() {
 
-    const [userDropdown, setUserDropdown] = useState(false)
+    const [userDropdown, setUserDropdown] = useState(false);
+    const [uploadDropdown, setUploadDropdown] = useState(false);
+
     const [query, setQuery] = useState("")
     const navigate = useNavigate()
 
     const authStatus = useSelector((state) => state.auth.status)
     const user = useSelector((state) => state.auth.userData)
-    const dropdownRef = useRef(null)
+
+    const userDropdownRef = useRef(null)
+    const uploadDropdownRef = useRef(null)
 
     const handleSearch = (e) => {
-        if (query.trim()!=="") {
-          navigate(`/search?q=${encodeURIComponent(query)}`);
+        if (query.trim() !== "") {
+            navigate(`/search?q=${encodeURIComponent(query)}`);
         }
-      };
-    const handleKeyDown=(e)=>{
+    };
+    const handleKeyDown = (e) => {
         if (e.key === 'Enter')
             handleSearch()
-    }  
+    }
     const handleUserDropdown = () => {
-        setUserDropdown(!userDropdown)
+        setUserDropdown(prev => !prev)
+    }
+    const handleUploadDropdown = () => {
+        setUploadDropdown(prev => !prev)
     }
     useEffect(() => {
         const closeDropdown = (event) => {
             if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target)
+                userDropdownRef.current &&
+                !userDropdownRef.current.contains(event.target)
             ) {
                 setUserDropdown(false);
+            }
+            if (
+                uploadDropdownRef.current &&
+                !uploadDropdownRef.current.contains(event.target)
+            ) {
+                setUploadDropdown(false);
             }
         };
 
@@ -69,15 +82,15 @@ function Header() {
     ]
 
     return (
-        <header className="bg-white py-2">
+        <header className=" bg-gradient-to-r from-cyan-300 to-blue-300 rounded-lg py-2">
             <Container>
-                <nav className="flex flex-row " >
-                    <div className="basis-1/4 flex-auto">
+                <nav className="flex flex-row justify-between items-center" >
+                    <div className="flex-auto max-w-[120px] mr-12">
                         <Link to="/">
                             <Logo className="" />
                         </Link>
                     </div>
-                    <ul className="sm:flex flex-row justify-around flex-auto basis-3/4 items-center text-lg" >
+                    <ul className="flex sm:space-x-2 md:space-x-8 lg:space-x-24 xl:space-x-36 2xl:space-x-48 space-x-4 flex-row justify-between items-center text-lg" >
                         {
                             navItems.map((item) => (
                                 <li key={item.name} >
@@ -104,17 +117,45 @@ function Header() {
 
                         }
                     </ul>
-                    {
-                        authStatus && (
-                            <button onClick={handleUserDropdown} className="focus:outline-none">
-                                <img src={user?.data?.avatar?.url} alt="Avatar" className="object-cover aspect-square md:max-w-16 sm:max-w-12 max-w-12 rounded-full" />
-                            </button>
-                        )
-                    }
+                    <div>
+                        {
+                            authStatus && (
+                                <button onClick={handleUploadDropdown} className="focus:outline-none">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="pointer-events-none w-8 h-8"
+                                        viewBox="0 0 24 24"
+                                        focusable="false"
+                                    >
+                                        <path d="M14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2zm3-7H3v12h14v-6.39l4 1.83V8.56l-4 1.83V6m1-1v3.83L22 7v8l-4-1.83V19H2V5h16z" />
+                                    </svg>
+                                </button>
+                            )
+                        }
+                    </div>
+                    <div>
+                        {
+                            authStatus && (
+                                <button onClick={handleUserDropdown} className="focus:outline-none">
+                                    <img src={user?.data?.avatar?.url} alt="Avatar" className="object-cover aspect-square md:max-w-16 sm:max-w-12 max-w-12 rounded-full" />
+                                </button>
+                            )
+                        }
+                    </div>
 
                 </nav>
             </Container>
-            <div className="relative" ref={dropdownRef} onClick={handleUserDropdown}>
+            <div className="relative" ref={uploadDropdownRef}>
+                {
+                    authStatus && uploadDropdown && (
+                        <div className="z-10 flex flex-col justify-between items-center absolute right-0 top-0 font-semibold bg-white rounded-md p-4 shadow ">
+                            <Link to={'/channel/uploadvideo'} className="text-blue-900 hover:bg-blue-200 active:scale-95 px-2 py-1 rounded">Upload Video</Link>
+                            <Link to={`/${user?.data?.username}/tweets`} className="text-blue-900 hover:bg-blue-200 active:scale-95 px-2 py-1 rounded">Create Tweet</Link>
+                        </div>
+                    )
+                }
+            </div>
+            <div className="relative" ref={userDropdownRef} >
                 {
                     authStatus && userDropdown && (
                         <ul className="z-10 flex flex-col justify-between items-center absolute right-0 top-0 bg-blue-300 rounded-md p-4 shadow ">

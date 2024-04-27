@@ -34,8 +34,6 @@ function Login() {
             }else if(session?.error){
                 setError(session?.error)
             }
-           
-
         } catch (error) {
             setError(error?.response?.data?.message)
         }
