@@ -103,7 +103,7 @@ function Login() {
                         {errors.password?.type === "maxLength" && <li role="alert">{errors.password?.message}</li>}
                     </ul>
                 }
-                <button type="submit" className="text-blue-950 border rounded-md w-24 h-10 bg-blue-400 text-xl font-sans font-semibold mt-4">Log In</button>
+                <button type="submit" className="text-blue-950 hover:text-white border rounded-md w-24 h-10 bg-blue-400 hover:bg-blue-600 text-xl font-sans font-semibold mt-4 active:scale-95">Log In</button>
 
             </form>
 

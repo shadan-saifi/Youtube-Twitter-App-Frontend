@@ -18,7 +18,6 @@ function ToggleSubscription({ isSubscribed, username, onSubscriptionChange }) {
             if (response) onSubscriptionChange(!isSubscribed);
 
         } catch (error) {
-            console.log(error.response?.data?.message || "An error occurred");
             setError(error.response?.data?.message || "An error occurred");
         }
     }
@@ -39,7 +38,7 @@ function ToggleSubscription({ isSubscribed, username, onSubscriptionChange }) {
             )}
             {authStatus && user.data.username === username && (
                 <div className="flex  gap-4 font-semibold flex-row justify-start items-center mt-6">
-                    <Link to="/edit-profile" >
+                    <Link to={`/channel/user/${user?.data?.username}/edit/details`}>
                         <Button  className=" text-white bg-blue-500 hover:bg-blue-600 hover:border active:scale-95 rounded-lg w-full max-w-64">Edit</Button>
                     </Link>
                     <Link to="/channel/videos">

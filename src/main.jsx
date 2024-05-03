@@ -5,10 +5,9 @@ import './index.css'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { CreateAccountPage, DashboardPage, GetPlaylistPage, HomeVideoPage, LoginPage, UploadAndEditVideoPage,  UserPage, UserPlaylistPage, UserSearchVideosPage, UserVideosPage, VideoByIdPage } from './pages/index.js'
+import { CreateAccountPage, DashboardPage, EditChannelDeatilsPage, EditChannelImagesPage, EditVideoPage, GetChannnelVideosPage, GetDashboardStatsPage, GetPlaylistPage, HomeVideoPage, LoginPage, UploadVideoPage,  UserPage, UserPlaylistPage, UserSearchVideosPage, UserVideosPage, VideoByIdPage } from './pages/index.js'
 import { AuthLayout } from './components/index.js'
-import GetChannnelVideosPage from './pages/dashboardPages/GetChannnelVideosPage.jsx'
-import GetDashboardStatsPage from './pages/dashboardPages/GetDashboardStatsPage.jsx'
+
 
 const router = createBrowserRouter([
   {
@@ -68,7 +67,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/channel/uploadvideo",
-            element: (<AuthLayout authorization={true} ><UploadAndEditVideoPage /></AuthLayout>),
+            element: (<AuthLayout authorization={true} ><UploadVideoPage /></AuthLayout>),
           },
           {
             path: "/channel/dashboard",
@@ -80,7 +79,15 @@ const router = createBrowserRouter([
           },
           {
             path: "/channel/:videoId/editvideo",
-            element: (<AuthLayout authorization={true} ><UploadAndEditVideoPage /></AuthLayout>),
+            element: (<AuthLayout authorization={true} ><EditVideoPage /></AuthLayout>),
+          }, 
+          {
+            path: "/channel/user/:username/edit/details",
+            element: (<AuthLayout authorization={true} ><EditChannelDeatilsPage /></AuthLayout>),
+          }, 
+          {
+            path: "/channel/user/:username/edit/images",
+            element: (<AuthLayout authorization={true} ><EditChannelImagesPage /></AuthLayout>),
           }, 
         ]
       }

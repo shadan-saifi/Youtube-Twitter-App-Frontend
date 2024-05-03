@@ -9,13 +9,13 @@ function DashboardSidebar(props) {
     return (
         <div className='flex  flex-col justify-start items-center w-full'>
             <img src={user?.data?.avatar?.secure_url} alt="avatar image"
-                className='xl:max-w-44 lg:max-w-40 md:max-w-36 sm:max-w-32 max-w-24 rounded-lg' />
+                className='xl:max-w-44 lg:max-w-40 md:max-w-36 sm:max-w-32 max-w-24 rounded-lg aspect-square object-cover' />
             <div className='mt-6'>Your own channel</div>
             <div className='font-semibold text-blue-600'>{user?.data?.fullname}</div>
             <hr className="my-4 w-full border-t-2 border-blue-500" />
             <br />
             <div className='font-semibold space-y-1 flex  flex-col justify-start items-center w-full'>
-                <div className='flex flex-row justify-start items-center space-x-2 hover:bg-cyan-400 hover:text-white p-1 rounded-lg active:scale-95'>
+                <div className='flex flex-row justify-center items-center space-x-4 hover:bg-cyan-400 hover:text-white p-1 rounded-lg active:scale-95'>
                     <div>
                         <svg
                             viewBox="0 0 24 24"
@@ -33,7 +33,7 @@ function DashboardSidebar(props) {
                     </div>
                     <Link to={`/channel/dashboard`} >Dashboard</Link>
                 </div>
-                <div className='flex flex-row justify-start items-center space-x-2 hover:bg-cyan-400 hover:text-white p-1 rounded-lg active:scale-95'>
+                <div className='flex flex-row justify-center items-center space-x-4 hover:bg-cyan-400 hover:text-white p-1 rounded-lg active:scale-95'>
                     <div >
                         <svg
                             viewBox="0 0 24 24"
@@ -55,7 +55,7 @@ function DashboardSidebar(props) {
                     </div>
                     <Link to={"/channel/videos"}>Your Videos</Link>
                 </div>
-                <div className='flex flex-row justify-start items-center space-x-2 hover:bg-cyan-400 hover:text-white p-1 rounded-lg active:scale-95'>
+                <div className='flex flex-row justify-center items-center space-x-4 hover:bg-cyan-400 hover:text-white p-1 rounded-lg active:scale-95'>
                     <div>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +70,7 @@ function DashboardSidebar(props) {
                     </div>
                     <Link to={"/"}>Your Playlists</Link>
                 </div>
-                <div className='flex flex-row justify-start items-center space-x-2 hover:bg-cyan-400 hover:text-white p-1 rounded-lg active:scale-95'>
+                {/* <div className='flex flex-row justify-center items-center space-x-4 hover:bg-cyan-400 hover:text-white p-1 rounded-lg active:scale-95'>
                     <div>
                         <svg
                             viewBox="0 0 24 24"
@@ -86,8 +86,8 @@ function DashboardSidebar(props) {
                         </svg>
                     </div>
                     <Link to={"/"}>Your Posts</Link>
-                </div>
-                <div className='flex flex-row justify-start items-center space-x-2 hover:bg-cyan-400 hover:text-white p-1 rounded-lg active:scale-95'>
+                </div> */}
+                <div className='flex flex-row justify-center items-center space-x-4 hover:bg-cyan-400 hover:text-white p-1 rounded-lg active:scale-95'>
                     <div>
                         <svg
                             viewBox="0 0 24 24"
@@ -104,6 +104,19 @@ function DashboardSidebar(props) {
                         </svg>
                     </div>
                     <Link to={"/"}>Comments</Link>
+                </div>
+                <div className='flex flex-row justify-center items-center space-x-4 hover:bg-cyan-400 hover:text-white p-1 rounded-lg active:scale-95'>
+                    <div>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="pointer-events-none w-6 h-6"
+                            viewBox="0 0 24 24"
+                            focusable="false"
+                        >
+                            <path d="M14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2zm3-7H3v12h14v-6.39l4 1.83V8.56l-4 1.83V6m1-1v3.83L22 7v8l-4-1.83V19H2V5h16z" />
+                        </svg>
+                    </div>
+                    <Link to={'/channel/uploadvideo'}>Upload Video</Link>
                 </div>
             </div>
         </div>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { publishVideo, updateVideo } from '../../services/videoService';
-import { useNavigate } from 'react-router-dom';
-import InputBox from '../InputBox';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { publishVideo, updateVideo } from '../../services/videoService';
+import InputBox from '../InputBox';
 
 function UploadAndEditVideo({ video = null }) {
     const [error, setError] = useState("");
@@ -21,7 +21,7 @@ function UploadAndEditVideo({ video = null }) {
             setValue("description", video.description);
             setValue("isPublished", video.isPublished);
         }
-    }, [video, setValue]);
+    }, [video, setValue])
 
     const submit = async (data) => {
         try {
@@ -29,7 +29,7 @@ function UploadAndEditVideo({ video = null }) {
                 const response = await updateVideo({ ...data, videoId: video?._id });
                 console.log("response of update ", response);
                 if (response.success === true) {
-                    navigate(`/channel`);
+                    navigate(`/channel/videos`);
                 } else {
                     setError("Failed to update video.");
                 }
@@ -44,7 +44,7 @@ function UploadAndEditVideo({ video = null }) {
             }
         } catch (error) {
             console.log(error);
-            setError(error.response?.data?.message || "An error occurred while uploading video");
+            setError(error.response?.data?.message || "An error occurred while uploading/updating video");
         }
     };
 
@@ -161,7 +161,14 @@ function UploadAndEditVideo({ video = null }) {
                                 })}
                                 aria-invalid={errors.thumbnail ? "true" : "false"}
                             />
-                            {thumbnailPreview && <img src={thumbnailPreview} className='max-w-[280px] rounded-2xl' />}
+                            {thumbnailPreview ? (
+                                <div>
+                                    <img src={thumbnailPreview} className="aspect-video object-cover" />
+                                </div>
+                            ) : (
+
+                                <img src={video?.thumbnail?.secure_url} alt="Thumbnail Image" className='my-2 aspect-video object-cover' />
+                            )}
                             {errors.thumbnail && (
                                 <ul>
                                     {errors.thumbnail.type === "required" && <li role="alert">{errors.thumbnail.message}</li>}
@@ -200,14 +207,12 @@ function UploadAndEditVideo({ video = null }) {
                                     })}
                                     aria-invalid={errors.thumbnail ? "true" : "false"}
                                 />
-                                {thumbnailPreview ? (
-                                    <div>
-                                        <img src={thumbnailPreview} className="aspect-video object-cover" />
-                                    </div>
-                                ) : (
+                                    {thumbnailPreview ? (
+                                            <img src={thumbnailPreview} className="aspect-video object-cover my-2" />
+                                    ) : (
 
-                                    <img src={video?.thumbnail?.secure_url} alt="Thumbnail Image" className='my-2 aspect-video object-cover' />
-                                )}
+                                        <img src={video?.thumbnail?.secure_url} alt="Thumbnail Image" className='my-2 aspect-video object-cover' />
+                                    )}
                                 {errors.thumbnail && (
                                     <ul>
                                         {errors.thumbnail.type === "required" && <li role="alert">{errors.thumbnail.message}</li>}

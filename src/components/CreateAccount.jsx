@@ -39,7 +39,6 @@ function CreateAccount() {
                     label="Fullname:"
                     placeholder="Enter your full name here"
                     type="text"
-                    required
                     {
                     ...register("fullname", {
                         required: "This field is required",
@@ -80,7 +79,7 @@ function CreateAccount() {
                     aria-invalid={errors.username ? "true" : "false"}
                 />
                 {
-                    errors.password && <ul>
+                    errors.username && <ul>
                         {errors.username?.type === "required" && <li role="alert">{errors.username?.message}</li>}
                         {errors.username?.type === "pattern" && <li role="alert">{errors.username?.message}</li>}
                         {errors.username?.type === "minLength" && <li role="alert">{errors.username?.message}</li>}
@@ -91,7 +90,6 @@ function CreateAccount() {
                     label="Email:"
                     placeholder="Enter email"
                     type="email"
-                    required
                     {
                     ...register("email", {
                         required: "This field is required",
@@ -104,7 +102,7 @@ function CreateAccount() {
                     aria-invalid={errors.email ? "true" : "false"}
                 />
                 {
-                    errors.password && <ul>
+                    errors.email && <ul>
                         {errors.email?.type === "required" && <li role="alert">{errors.email?.message}</li>}
                         {errors.email?.type === "pattern" && <li role="alert">{errors.email?.message}</li>}
 
@@ -114,7 +112,6 @@ function CreateAccount() {
                     label="Password:"
                     placeholder="Enter password here"
                     type="password"
-                    required
                     {...register("password", {
                         required: "This field is required",
                         pattern: {
@@ -141,18 +138,18 @@ function CreateAccount() {
                     </ul>
                 }
                 <InputBox
-                    label="Avatar(max-size:5MB):"
+                    label="Avatar(max-size:2MB):"
                     type="file"
                     alt="avatar"
                     accept="image/*"
-                    required
+                    
                     {
                     ...register("avatar", {
                         required: "This field is required",
                         validate: {
                             size: (file) => {
-                                const maxSize = 5 * 1024 * 1024
-                                if (file[0]?.size > maxSize) return "File size exceeds the maximum allowed limit of 5MB";
+                                const maxSize = 2 * 1024 * 1024
+                                if (file[0]?.size > maxSize) return "File size exceeds the maximum allowed limit of 2MB";
 
                                 else return true
                             },
@@ -169,7 +166,7 @@ function CreateAccount() {
                     </ul>
                 }
                 <InputBox
-                    label="Cover Image(max-size:10MB):"
+                    label="Cover Image(max-size=5MB, aspect-ratio=16/9):"
                     type="file"
                     alt="Cover Image"
                     accept="image/*"
@@ -177,8 +174,8 @@ function CreateAccount() {
                     ...register("coverImage", {
                         validate: {
                             size: (file) => {
-                                const maxSize = 10 * 1024 * 1024
-                                if (file[0]?.size > maxSize) return "File size exceeds the maximum allowed limit of 10MB";
+                                const maxSize = 5 * 1024 * 1024
+                                if (file[0]?.size > maxSize) return "File size exceeds the maximum allowed limit of 5MB";
 
                                 else return true
                             },

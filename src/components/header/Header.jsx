@@ -148,9 +148,9 @@ function Header() {
             <div className="relative" ref={uploadDropdownRef}>
                 {
                     authStatus && uploadDropdown && (
-                        <div className="z-10 flex flex-col justify-between items-center absolute right-0 top-0 font-semibold bg-white rounded-md p-4 shadow ">
+                        <div className="z-10 flex flex-col justify-between items-center absolute xl:right-40 lg:right-20 md:right-16 sm:right-4 right-14 top-0 font-semibold bg-white rounded-md p-2 my-2 shadow ">
                             <Link to={'/channel/uploadvideo'} className="text-blue-900 hover:bg-blue-200 active:scale-95 px-2 py-1 rounded">Upload Video</Link>
-                            <Link to={`/${user?.data?.username}/tweets`} className="text-blue-900 hover:bg-blue-200 active:scale-95 px-2 py-1 rounded">Create Tweet</Link>
+                            {/* <Link to={`/${user?.data?.username}/tweets`} className="text-blue-900 hover:bg-blue-200 active:scale-95 px-2 py-1 rounded">Create Tweet</Link> */}
                         </div>
                     )
                 }
@@ -158,7 +158,7 @@ function Header() {
             <div className="relative" ref={userDropdownRef} >
                 {
                     authStatus && userDropdown && (
-                        <ul className="z-10 flex flex-col justify-between items-center absolute right-0 top-0 bg-blue-300 rounded-md p-4 shadow ">
+                        <ul className="z-10 space-y-2 flex flex-col justify-between items-center absolute right-0 top-0 bg-blue-300 rounded-md p-4 shadow  ">
                             <li className="flex flex-row justify-center items-center">
                                 <div className="">
                                     <img src={user?.data?.avatar?.url} alt="Avatar" className="h-20 w-20 rounded-full" />
@@ -170,6 +170,7 @@ function Header() {
                             </li>
                             <hr className="my-4 w-full border-t-2 border-blue-500" />
                             <li><Link to={`/${user?.data?.username}/videos`} className="text-blue-900 hover:bg-blue-200 px-2 py-1 rounded">View your channel</Link></li>
+                            <li><Link to={`/channel/dashboard`} className="text-blue-900 hover:bg-blue-200 px-2 py-1 rounded">View your dashboard</Link></li>                            
                             <li className=" text-lg font-medium hover:bg-blue-200 px-2 py-1 mt-2 rounded">
                                 <LogoutBtn />
                             </li>

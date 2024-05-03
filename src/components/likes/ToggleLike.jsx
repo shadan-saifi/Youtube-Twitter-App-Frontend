@@ -11,7 +11,6 @@ function ToggleLike({ videoId }) {
 
     const authStatus = useSelector((state) => state.auth.status);
     const user = useSelector((state) => state.auth.userData);
-    console.log("user:::",user);
 
     useEffect(() => {
         (async () => {
@@ -32,9 +31,7 @@ function ToggleLike({ videoId }) {
 
     useEffect(() => {
         if (video?.likes && !likeActionPerformed) { 
-            console.log("video.likes:", video?.likes);
             const isLikedByCurrentUser = video.likes.some(like => like?.likedBy === user?.data?._id);
-            console.log("isLikedByCurrentUser:", isLikedByCurrentUser);
             setIsLiked(isLikedByCurrentUser);
         }
     }, [video, likeActionPerformed]); 
@@ -42,7 +39,6 @@ function ToggleLike({ videoId }) {
     const handleLike = async () => {
         try {
             const response = await toggleVideoLike({ videoId });
-            console.log("response of togglemliek:", response);
             setIsLiked(response?.message === "video liked successfully")
             setLikeActionPerformed(true); // Set like action performed flag
 
@@ -52,8 +48,6 @@ function ToggleLike({ videoId }) {
     };
   
   
-    console.log("isLiked:", isLiked);
-
     return (
         <div>
             <svg

@@ -14,10 +14,10 @@ function UserPage() {
       };
 
     const navItems = [
-        {
-            name: "Home",
-            to: `/${username}/featured`,
-        },
+        // {
+        //     name: "Home",
+        //     to: `/${username}/featured`,
+        // },
         {
             name: "Videos",
             to: `/${username}/videos`,
@@ -26,15 +26,15 @@ function UserPage() {
             name: "Playlists",
             to: `/${username}/playlists`,
         },
-        {
-            name: "Tweets",
-            to: `/${username}/tweets`,
-        },
+        // {
+        //     name: "Tweets",
+        //     to: `/${username}/tweets`,
+        // },
     ]
     return (
         <div>
             <UserProfile username={username} />
-            <nav className="relative flex flex- sm:flex-row flex-col sm:justify-between justify-center items-center  shadow-lg  gap-4 w-full bg-blue-500 text-white rounded-lg">
+            <nav className="relative flex flex- sm:flex-row flex-col sm:justify-around justify-center items-center  shadow-lg  gap-4 w-full bg-blue-500 text-white rounded-lg">
                 {navItems.map((item) => (
                     <NavLink key={item.name} to={item.to}
                         className={({ isActive, isTransitioning, isPending }) => [

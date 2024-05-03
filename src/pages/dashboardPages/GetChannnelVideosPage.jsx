@@ -2,7 +2,7 @@ import React from 'react';
 import { GetChannelVideos } from '../../components';
 import { useSelector } from 'react-redux';
 
-function GetChannnelVideosPage(props) {
+function GetChannnelVideosPage() {
 
     const user = useSelector((state) => state.auth.userData);
 

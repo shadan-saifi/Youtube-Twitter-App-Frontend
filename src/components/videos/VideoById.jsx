@@ -53,7 +53,7 @@ function VideoById({ video }) {
     };
 
     return (
-        <div className='h-full aspect-video mt-10 ' >
+        <div className='h-full aspect-video object-cover mt-10 ' >
             <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
         </div>
     )

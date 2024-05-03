@@ -83,6 +83,56 @@ async function refreshAccessToken() {
     }
 }
 
+async function updateAccountDetails({ fullname, email }) {
+    try {
+        console.log("fullname  ,email",fullname,email);
+        const response = await axios.patch(`/api/v1/users/update-account`, { fullname:fullname, email:email })
+        console.log("response of service",response);
+        return await handleResponse(response)
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
+async function updateAvatar({avatar}) {
+    try {
+        const formData = new FormData();
+        formData.append("avatar", avatar[0]);
+
+        const response = await axios.patch(`/api/v1/users/update-avatar`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return await handleResponse(response)
+    } catch (error) {
+        throw error
+    }
+}
+async function updateCoverImage({coverImage}) {
+    try {
+        const formData = new FormData();
+        formData.append("coverImage", coverImage[0]);
+
+        const response = await axios.patch(`/api/v1/users/update-cover-image`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return await handleResponse(response)
+    } catch (error) {
+        throw error
+    }
+}
+
+async function deleteCoverImage(){
+    try {
+        const response = await axios.patch(`/api/v1/users/delete-cover-image`);
+        return await handleResponse(response)
+    } catch (error) {
+        throw error
+    }
+}
 async function getUserChannelProfile({ username }) {
     try {
         const response = await axios.get(`/api/v1/users/c/${username}`)
@@ -91,4 +141,5 @@ async function getUserChannelProfile({ username }) {
         throw error
     }
 }
-export { createAccount, loginUser, logoutUser, getCurrentUser, refreshAccessToken, getUserChannelProfile }
+export { createAccount, loginUser, logoutUser, getCurrentUser, refreshAccessToken, 
+    getUserChannelProfile, updateAccountDetails,updateAvatar,updateCoverImage,deleteCoverImage }

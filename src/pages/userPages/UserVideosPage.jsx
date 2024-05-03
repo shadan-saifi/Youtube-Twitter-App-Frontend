@@ -6,7 +6,6 @@ import { GetVideos } from "../../components";
 function UserVideosPage() {
 
     const { username } = useParams()
-    console.log("username:fs",username);
 
    
     return (

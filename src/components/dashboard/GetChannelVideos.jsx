@@ -6,9 +6,10 @@ import handleCommentsCount from '../../hooks/handleCommentsCount';
 import handleLikeCount from '../../hooks/handleLikeCount';
 import Select from '../Select';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import InputBox from '../InputBox';
 import Pagination from '../pagination/Pagination';
+import { deleteVideo } from '../../services/videoService';
 
 function GetChannelVideos({ username }) {
 
@@ -21,15 +22,17 @@ function GetChannelVideos({ username }) {
     const siblingCount = 1;
     const [loading, setLoading] = useState(false)
 
+
     const handlePageChange = (page) => {
         setCurrentPage(page)
     }
     const { register, formState: { errors }, handleSubmit, watch } = useForm({
         defaultValues: {
-            sortBy: "title",
-            sortType: "asc",
-            limit: 4,
-            page: 1,
+            sortBy: JSON.parse(sessionStorage.getItem('sortBy')) || "title",
+            sortType: JSON.parse(sessionStorage.getItem('sortType')) || "asc",
+            limit: JSON.parse(sessionStorage.getItem('limit')) || 4,
+            isPublished: JSON.parse(sessionStorage.getItem('isPublished')) || "",
+            query: JSON.parse(sessionStorage.getItem('query')) || ""
         }
     });
 
@@ -42,8 +45,6 @@ function GetChannelVideos({ username }) {
             query: watch("query")
         };
     }, [watch]);
-
-    console.log("szfgbdxfb", allVideos);
 
     useEffect(() => {
         ; (async () => {
@@ -60,12 +61,33 @@ function GetChannelVideos({ username }) {
                 }
                 setLoading(false)
             } catch (error) {
-                console.log("error while getting channel stats:", error);
+                console.log("error while getting channel videos:", error);
                 setError(error.response?.data?.message || "An error occurred");
                 setLoading(false)
             }
         })()
     }, [currentPage, watchFields().sortBy, watchFields().sortType, watchFields().limit, watchFields().isPublished, watchFields().query]);
+
+    useEffect(() => {
+        // Save form data to localStorage
+        sessionStorage.setItem('sortBy', JSON.stringify(watchFields().sortBy));
+        sessionStorage.setItem('sortType', JSON.stringify(watchFields().sortType));
+        sessionStorage.setItem('limit', JSON.stringify(watchFields().limit));
+        sessionStorage.setItem('isPublished', JSON.stringify(watchFields().isPublished));
+        sessionStorage.setItem('query', JSON.stringify(watchFields().query));
+    }, [ watchFields().sortBy, watchFields().sortType, watchFields().limit, watchFields().isPublished, watchFields().query]);
+
+    const handleDelete = async (videoId) => {
+        try {
+            const response = await deleteVideo({ videoId })
+            if (response.success === true) {
+                window.location.reload();
+            }
+        } catch (error) {
+            console.log("error while getting channel stats:", error);
+            setError(error.response?.data?.message || "An error occurred");
+        }
+    }
     return !loading ? (
         <div>
             {error && <p className="text-red-600 m-3 p-3 text-center">{error}</p>}
@@ -179,7 +201,9 @@ function GetChannelVideos({ username }) {
                                 allVideos?.videos?.map((video) => (
                                     <tr key={video._id} className=' text-center'>
                                         <td className='max-w-full border border-slate-300 flex sm:flex-row flex-col justify-center items-center'>
-                                            <img src={video?.thumbnail?.secure_url} alt="Video Thumbnail" className='max-w-28 m-2 rounded-md' />
+                                            <Link to={`/watch?v=${encodeURIComponent(video?._id)}`}>
+                                                <img src={video?.thumbnail?.secure_url} alt="Video Thumbnail" className='max-w-28 m-2 rounded-md aspect-video object-cover' />
+                                            </Link>
                                             <div className='flex flex-grow w-full space-x-2 mr-2'>
                                                 <div className='hover:bg-gray-200 active:scale-95 bg-gray-50 px-2 py-0.5 rounded-md flex flex-row justify-center items-center'>
                                                     <div className='max-w-6'>
@@ -215,7 +239,7 @@ function GetChannelVideos({ username }) {
                                                             </g>
                                                         </svg>
                                                     </div>
-                                                    <Link >Delete</Link>
+                                                    <button onClick={() => handleDelete(video._id)}>Delete</button>
                                                 </div>
                                             </div>
                                         </td>
@@ -230,13 +254,17 @@ function GetChannelVideos({ username }) {
                         </tbody>
                         <tfoot>
                             <tr >
-                                <th colspan="6">  {currentPage && <Pagination
-                                    onPageChange={handlePageChange}
-                                    totalCount={totalVideoCount}
-                                    siblingCount={siblingCount}
-                                    currentPage={currentPage}
-                                    pageSize={videoPerPage}
-                                />}</th>
+                                <th colSpan="6">
+                                    {
+                                        currentPage && <Pagination
+                                            onPageChange={handlePageChange}
+                                            totalCount={totalVideoCount}
+                                            siblingCount={siblingCount}
+                                            currentPage={currentPage}
+                                            pageSize={videoPerPage}
+                                        />
+                                    }
+                                </th>
 
                             </tr>
                         </tfoot>

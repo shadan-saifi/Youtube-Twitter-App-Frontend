@@ -58,20 +58,15 @@ function GetVideos({ username = null }) {
                 if (username !== null) {
                     if (query) {
                         response = await getUserSearchedVideos({ ...watchFields(), page: currentPage, username, query })
-                        console.log("query response:", response);
                     } else {
                         response = await getAllUserVideos({ ...watchFields(), page: currentPage, username })
-                        console.log("all videos response:", response);
-
                     }
                 } else if (username === null) {
                     if (query) {
                         response = await getSearchedVideos({ ...watchFields(), page: currentPage, query })
-                        console.log("null user qury video response:", response);
 
                     } else {
                         response = await getAllVideos({ ...watchFields(), page: currentPage })
-                        console.log("null user all video response:", response);
                     }
                 }
                 if (response) {
@@ -188,7 +183,7 @@ function GetVideos({ username = null }) {
 
                                 <div className="relative">
                                     <img src={videoDetails?.thumbnail?.url} alt={videoDetails?.title}
-                                        className="rounded-2xl"
+                                        className="rounded-2xl aspect-video object-cover"
                                     />
                                     <span className="absolute right-3 bottom-1 text-lg text-white px-1  bg-gray-600 bg-opacity-70 rounded-md">
                                         {handleDuration(videoDetails?.duration)}</span>

@@ -7,8 +7,14 @@ import UserPage from "./userPages/UserPage.jsx"
 import UserVideosPage from "./userPages/UserVideosPage.jsx"
 import UserPlaylistPage from "./userPages/UserPlaylistsPage.jsx";
 import GetPlaylistPage from "./playlistPages/GetPlaylistPage.jsx";
-import UploadAndEditVideoPage from "./uploadPages/UploadAndEditVideoPage.jsx";
+import EditVideoPage from "./uploadAndEditPages/EditVideoPage.jsx";
 import DashboardPage from "./dashboardPages/DashboardPage.jsx";
+import UploadVideoPage from "./uploadAndEditPages/UploadVideoPage.jsx";
+import EditChannelDeatilsPage from "./uploadAndEditPages/EditChannelDeatilsPage.jsx";
+import EditChannelImagesPage from "./uploadAndEditPages/EditChannelImagesPage.jsx";
+import GetDashboardStatsPage from "./dashboardPages/GetDashboardStatsPage.jsx";
+import GetChannnelVideosPage from "./dashboardPages/GetChannnelVideosPage.jsx";
+
 
 export {LoginPage,
     HomeVideoPage,
@@ -19,6 +25,12 @@ export {LoginPage,
     UserSearchVideosPage,
     UserPlaylistPage,
     GetPlaylistPage,
-    UploadAndEditVideoPage,
-    DashboardPage
+    EditVideoPage,
+    DashboardPage,
+    UploadVideoPage,
+    EditChannelDeatilsPage,
+   GetDashboardStatsPage,
+   GetChannnelVideosPage,
+   EditChannelImagesPage
+
 }
