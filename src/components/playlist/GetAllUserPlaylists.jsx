@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getUserPlaylists } from '../../services/playlistService';
 import { Link } from 'react-router-dom';
 import handleUploadDate from '../../hooks/handleUploadDate';
+import { Skeleton } from '../ui/skeleton';
 
 function GetAllUserPlaylists({ username }) {
     const [error, setError] = useState("")
@@ -37,9 +38,9 @@ function GetAllUserPlaylists({ username }) {
                             <div key={playlist?._id} className="max-w-72 hover:scale-[1.01] ">
                                 <Link to={`/watch?v=${encodeURIComponent(playlist?.allVideos[0]?._id)}&list=${encodeURIComponent(playlist?._id)}`}>
                                     <div className="relative">
-                                        <img src={playlist?.allVideos[0]?.thumbnail?.secure_url} alt={playlist?.allVideos[0]?.title}
+                                        {playlist?.allVideos[0]?.thumbnail ? <img src={playlist?.allVideos[0]?.thumbnail?.secure_url} alt={playlist?.allVideos[0]?.title}
                                             className="rounded-2xl"
-                                        />
+                                        /> : <div className='aspect-video rounded-2xl flex flex-row justify-center items-center border'>Playlist is empty</div>}
                                         <span className="absolute right-3 bottom-1 text-lg text-white px-1  bg-gray-600 bg-opacity-70 rounded-md">
                                             {playlist?.TotalVideos} Videos</span>
                                     </div>
@@ -59,7 +60,13 @@ function GetAllUserPlaylists({ username }) {
                 }
             </div>
         </div >
-    ) : (<div>...Loading</div>)
+    ) : <div className=" flex flex-col justify-center items-center w-full h-svh space-y-3">
+        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+        <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+        </div>
+    </div>
 }
 
 export default GetAllUserPlaylists;

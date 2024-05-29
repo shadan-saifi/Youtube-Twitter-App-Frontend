@@ -6,6 +6,10 @@ import { login, logout } from './store/authSlice'
 import { Outlet } from 'react-router-dom'
 import Header from './components/header/Header'
 import { Footer } from './components'
+import { ThemeProvider } from "@/components/ThemeProvider"
+import { Skeleton } from "@/components/ui/skeleton"
+
+
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -49,16 +53,21 @@ function App() {
 
 
   return !loading ? (
-    <div>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme" >
       <Header />
-      <main className=''>
+      <main >
         <Outlet />
       </main>
       <Footer />
-    </div>
+    </ThemeProvider>
   ) : (
-    <div>...Loading</div>
-  )
+    <div className=" flex flex-col justify-center items-center w-full h-svh space-y-3">
+      <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>)
 
 }
 

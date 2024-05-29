@@ -3,6 +3,9 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import InputBox from '../InputBox';
 import { deleteCoverImage, updateCoverImage } from '../../services/userService';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 
 function EditChannelCoverImage({ username, user }) {
     const [error, setError] = useState("")
@@ -40,11 +43,12 @@ function EditChannelCoverImage({ username, user }) {
         <div className='w-full ml-12 '>
             {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
             <form onSubmit={handleSubmit(submit)}
-                className='w-full flex flex-col justify-start items-start'
+                className='w-full flex flex-col justify-start items-start space-y-2'
             >
-                <div>
-                    <InputBox
-                        label="Cover Image(max-size=5MB, aspect-ratio=16/9):"
+                <div className='space-y-2'>
+                    <Label htmlFor="coverImage">Cover Image (max-size=5MB, aspect-ratio=16/9):</Label>
+                   <Input
+                        id="Cover Image"
                         type="file"
                         alt="Cover Image"
                         accept="image/*"
@@ -62,12 +66,13 @@ function EditChannelCoverImage({ username, user }) {
                         aria-invalid={errors.coverImage ? "true" : "false"}
                     />
 
-                    {errors.coverImage && (
-                        <ul>
-                            {errors.coverImage.type === "required" && <li role="alert">{errors.coverImage.message}</li>}
-                            {errors.coverImage.type === "validate" && <li role="alert">{errors.coverImage.message}</li>}
-                        </ul>
-                    )}
+                    {
+                        errors.coverImage && (
+                            <ul>
+                                {errors.coverImage.type === "required" && <li role="alert">{errors.coverImage.message}</li>}
+                                {errors.coverImage.type === "validate" && <li role="alert">{errors.coverImage.message}</li>}
+                            </ul>
+                        )}
                     {coverImagePreview ? (
                         <img src={coverImagePreview} className=" aspect-video max-w-72  object-cover my-2" />
                     ) : (
@@ -76,12 +81,10 @@ function EditChannelCoverImage({ username, user }) {
                     )}
                 </div>
                 <div className=' flex flex-row justify-between items-center space-x-16'>
-                    <button type="submit" className=" rounded-md px-2 py-1 mt-8 
-                 text-xl text-blue-800 font-sans font-semibold hover:bg-gray-300 active:scale-95">Change</button>
-                    <button onClick={() => deletingCoverImage()} className=" rounded-md px-2 py-1 mt-8 
-                 text-xl text-blue-800 font-sans font-semibold hover:bg-gray-300 active:scale-95">
+                    <Button type="submit" variant="outline" >Change</Button>
+                    <Button onClick={() => deletingCoverImage()} type="submit" variant="outline">
                         Delete
-                    </button>
+                    </Button>
                 </div>
             </form>
 

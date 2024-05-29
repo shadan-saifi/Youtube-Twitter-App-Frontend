@@ -11,13 +11,14 @@ function GetPlaylistVideos({ playlistId }) {
         !error ? (
             playlist?.data?.allVideos?.map((video, i) => (
                 <NavLink key={video?._id} to={`/watch?v=${encodeURIComponent(video?._id)}&list=${encodeURIComponent(playlist?.data?._id)}&index=${i + 1}`}
-                    >
-                    <div className='flex flex-row justify-start items-start w-full hover:bg-gray-300 active:scale-95 rounded-xl px-2'>
-                        <div className="text-center text-xl p-4 mt-16">{i + 1}</div>
+                >
+                    <div className='flex flex-row justify-start items-start w-full dark:hover:bg-gray-900 hover:bg-gray-100 active:scale-95 rounded-xl px-2'>
+                        <div className="text-center text-xl p-4 my-auto">{i + 1}</div>
                         <div className=' relative'>
-                            <img src={video?.thumbnail?.secure_url} alt={video?.title} className='bg-gray-100 rounded-xl max-w-56 p-4 my-4' />
-                            <span className="absolute right-7 bottom-10 text-lg text-white px-1  bg-gray-600 bg-opacity-70 rounded-md">
-                                {handleDuration(video?.duration)}</span>
+                            <img src={video?.thumbnail?.secure_url} alt={video?.title} className='bg-gray-100 rounded-xl max-w-56 my-4 aspect-video' />
+                            <span className="absolute right-2 bottom-6 text-lg text-white px-1 bg-gray-600 bg-opacity-70 rounded-md">
+                                {handleDuration(video?.duration)}
+                            </span>
                         </div>
                         <div className=' p-4 my-4 w-full flex flex-col justify-start items-start grow'>
                             <div className='text-xl font-semibold'>{video?.title}</div>

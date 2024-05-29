@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getChannelStats } from '../../services/dashboardService';
+import { Skeleton } from "@/components/ui/skeleton"
+
 
 function GetDashboardStats(props) {
     const [stats, setStats] = useState("")
@@ -32,14 +34,14 @@ function GetDashboardStats(props) {
                 <div className='  text-lg font-semibold text-cyan-500 flex flex-col justify-start items-start w-full'>
                     <div className=' flex flex-row justify-around items-center w-full'>
                         <div>Current Subscribers</div>
-                        <span className='text-black mr-5' >{stats?.data?.totalSubscribers}</span>
+                        <span className=' mr-5' >{stats?.data?.totalSubscribers}</span>
                     </div>
                     <hr className="my-4 w-full  border border-blue-50" />
                     <div className=' flex flex-row justify-around items-center w-full'>
                         <div>Total Videos</div>
                         {
                             stats?.data?.totalViewsAndVideos && stats.data.totalViewsAndVideos.totalVideos !== null ? (
-                                <span className='text-black'>{stats.data.totalViewsAndVideos.totalVideos}</span>
+                                <span>{stats.data.totalViewsAndVideos.totalVideos}</span>
                             ) : (
                                 <div className='text-black'>0</div>
                             )
@@ -50,21 +52,28 @@ function GetDashboardStats(props) {
                         <div>Total Views</div>
                         {
                             stats?.data?.totalViewsAndVideos && stats.data.totalViewsAndVideos.totalViews !== null ? (
-                                <span className='text-black'>{stats.data.totalViewsAndVideos.totalViews}</span>
+                                <span>{stats.data.totalViewsAndVideos.totalViews}</span>
                             ) : (
-                                <div className='text-black'>0</div>
+                                <div>0</div>
                             )
                         }                    </div>
                     <hr className="my-4 w-full  border border-blue-50" />
                     <div className=' flex flex-row justify-around items-center w-full'>
                         <div>Total Likes</div>
-                        <span className='text-black' >{stats?.data?.totalLikes}</span>
+                        <span  >{stats?.data?.totalLikes}</span>
                     </div>
                     <hr className="my-4 w-full  border border-blue-50" />
                 </div>
             </div>
         </div>
-    ) : (<div>...Loading</div>);
+    ) : (<div className=" flex flex-col justify-center items-center w-full h-svh space-y-3">
+        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+        <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+        </div>
+    </div>
+    );
 }
 
 export default GetDashboardStats;

@@ -15,7 +15,7 @@ function GetPlaylistPage() {
                 <GetPlaylistVideos playlistId={playlistId}/> 
             </div>
         </div>
-    );
+    ); 
 }
 
 export default GetPlaylistPage;

@@ -19,7 +19,7 @@ import GetVideos from "./videos/GetVideos.jsx";
 import GetAllUserPlaylists from "./playlist/GetAllUserPlaylists.jsx";
 import GetPlaylistDetails from "./playlist/GetPlaylistDetails.jsx";
 import GetPlaylistVideos from "./playlist/GetPlaylistVideos.jsx";
-import GetVideoComments from "./comments/GetVideoComments.jsx";
+import VideoComments from "./comments/VideoComments.jsx";
 import UploadAndEditVideo from "./videos/UploadAndEditVideo.jsx";
 import DashboardSidebar from "./dashboard/DashboardSidebar.jsx";
 import GetChannelVideos from "./dashboard/GetChannelVideos.jsx";
@@ -27,8 +27,12 @@ import GetDashboardStats from "./dashboard/GetDashboardStats.jsx";
 import EditChannelDetails from "./dashboard/EditChannelDeatils.jsx";
 import EditChannelAvatar from "./dashboard/EditChannelAvatar.jsx";
 import EditChannelCoverImage from "./dashboard/EditChannelCoverImage.jsx";
-import AddAndEditVideoComment from "./comments/AddAndEditVideoComment.jsx";
-
+import AddVideoComment from "./comments/AddVideoComment.jsx";
+import DeleteVideoComment from "./comments/DeleteVideoComment.jsx";
+import GetAndUpdateVideoComment from "./comments/GetAndUpdateVideoComment.jsx";
+import AddToPlaylist from "./playlist/AddToPlaylist";
 export { Header,Footer, Container, AuthLayout, Button, InputBox, Login, Select, CreateAccount, UserProfile, Pagination, ToggleSubscription,
- VideoById, VideoJS, GetVideoComments, VideoDescription,VideoDetails, ToggleLike, GetVideos, GetAllUserPlaylists, GetPlaylistDetails,GetPlaylistVideos,
- UploadAndEditVideo, DashboardSidebar,GetChannelVideos,GetDashboardStats, EditChannelDetails,EditChannelAvatar,EditChannelCoverImage,AddAndEditVideoComment }
+ VideoById, VideoJS, VideoComments, VideoDescription,VideoDetails, ToggleLike, GetVideos, GetAllUserPlaylists, GetPlaylistDetails,GetPlaylistVideos,
+ UploadAndEditVideo, DashboardSidebar,GetChannelVideos,GetDashboardStats, EditChannelDetails,EditChannelAvatar,EditChannelCoverImage,AddVideoComment,
+ DeleteVideoComment,GetAndUpdateVideoComment, AddToPlaylist
+ }

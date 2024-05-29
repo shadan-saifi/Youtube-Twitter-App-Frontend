@@ -15,7 +15,6 @@ async function toggleSubscription({username}) {
     try {
         const response = await axios.post(`/api/v1/subscriptions/c/${username}`)
         const data =await handleResponse(response)
-        console.log('Backend Response.data:', data);
         return data
     } catch (error) {
         throw error

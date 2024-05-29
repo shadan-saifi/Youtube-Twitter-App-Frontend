@@ -1,13 +1,38 @@
 import { useCallback, useEffect, useState } from "react"
 import { getAllUserVideos, getAllVideos, getSearchedVideos, getUserSearchedVideos } from "../../services/videoService"
-import { useForm } from "react-hook-form"
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom"
 import Pagination from "../pagination/Pagination"
 import { useSelector } from "react-redux"
-import Select from "../Select"
 import handleViews from "../../hooks/handleViews"
 import handleUploadDate from "../../hooks/handleUploadDate"
 import handleDuration from "../../hooks/handleDuration"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Skeleton } from "@/components/ui/skeleton"
+import {
+    Select,
+    SelectGroup,
+    SelectValue,
+    SelectTrigger,
+    SelectContent,
+    SelectLabel,
+    SelectItem,
+} from "@/components/ui/select"
+
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { Button } from "@/components/ui/button"
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { AddToPlaylist } from ".."
 
 
 function GetVideos({ username = null }) {
@@ -22,14 +47,23 @@ function GetVideos({ username = null }) {
     const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
-    const { register, formState: { errors }, handleSubmit, watch } = useForm({
+
+    const form = useForm({
+        resolver: zodResolver(
+            z.object({
+                sortBy: z.string().min(1, "This field is required"),
+                sortType: z.string().min(1, "This field is required"),
+                limit: z.number().int().min(1, "This field is required"),
+                isPublished: z.boolean().optional()
+            })
+        ),
         defaultValues: {
             sortBy: "title",
             sortType: "asc",
-            limit: 4,
+            limit: "4",
             isPublished: true
         }
-    });
+    })
 
     const authStatus = useSelector((state) => state.auth.status);
     const user = useSelector((state) => state.auth.userData);
@@ -43,12 +77,12 @@ function GetVideos({ username = null }) {
 
     const watchFields = useCallback(() => {
         return {
-            sortBy: watch("sortBy"),
-            sortType: watch("sortType"),
-            limit: watch("limit"),
-            isPublished: watch("isPublished")
+            sortBy: form.watch("sortBy"),
+            sortType: form.watch("sortType"),
+            limit: form.watch("limit"),
+            isPublished: form.watch("isPublished")
         };
-    }, [watch]);
+    }, [form.watch]);
 
     useEffect(() => {
         ; (async () => {
@@ -69,6 +103,7 @@ function GetVideos({ username = null }) {
                         response = await getAllVideos({ ...watchFields(), page: currentPage })
                     }
                 }
+                console.log("response", response);
                 if (response) {
                     setTotalVideoCount(response?.data?.totalVideos)
                     setVideoPerPage(response?.data?.videosOnPage)
@@ -85,100 +120,136 @@ function GetVideos({ username = null }) {
 
     return !loading ? (
         <div>
-            <form onSubmit={handleSubmit(() => { })}
-                className={`${username === null ? `bg-gray-50 mt-8 rounded-xl` : null} flex sm:flex-row flex-col sm:justify-end justify-center sm:items-center shadow-md p-3 mb-3 sm:space-x-4 space-y-2`} >
-                <div>
-                    <label htmlFor="sortBy" >Sort By:</label>
-                    <select id="sortBy"
-                        className="border focus:border-red-400 "
-                        {
-                        ...register("sortBy", {
-                            required: "This field is required",
-                        })
-                        }
-                        aria-invalid={errors.sortBy ? "true" : "false"}
-                    >
-                        <option value="title" >Title</option>
-                        <option value="description">Description</option>
-                        <option value="duration">Duration</option>
-                        <option value="views">Views</option>
-                        <option value="createdAt">Upload Date</option>
-                    </select>
-                    {
-                        errors.sortBy && <ul>
-                            {errors.sortBy?.type === "required" && <li role="alert">{errors.sortBy?.message}</li>}
-                        </ul>
-                    }
-                </div>
-
-                <div>
-                    <label htmlFor="sortType">Sort Type:</label>
-                    <select id="sortType"
-                        className="border focus:border-red-400"
-                        {
-                        ...register("sortType", {
-                            required: "This field is required",
-                        })
-                        }
-                        aria-invalid={errors.sortType ? "true" : "false"}
-                    >
-                        <option value="asc" >Ascending</option>
-                        <option value="desc">Descending</option>
-                    </select>
-                    {
-                        errors.sortType && <ul>
-                            {errors.sortType?.type === "required" && <li role="alert">{errors.sortType?.message}</li>}
-                        </ul>
-                    }
-                </div>
-
-                <Select label="Videos Per Page:" options={[1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 40, 50]}
-                    className="border focus:border-red-400"
-
-                    {
-                    ...register("limit", {
-                        required: "This field is required",
-                    })
-                    }
-                    aria-invalid={errors.limit ? "true" : "false"} />
-                {
-                    errors.limit && <ul>
-                        {errors.limit?.type === "required" && <li role="alert">{errors.limit?.message}</li>}
-                    </ul>
-                }
-
-                {authStatus && username !== null && user?.data?.username === username &&
-                    <div>
-                        <label htmlFor="isPublish">Publication status:</label>
-                        <select id="isPublish"
-                            className="border focus:border-red-400"
-
-                            {
-                            ...register("isPublished", {
-                                required: "This field is required",
-                            })
-                            }
-                            aria-invalid={errors.isPublished ? "true" : "false"}
-                        >
-                            <option value={true}>Published</option>
-                            <option value={false}>Unpublished</option>
-
-                        </select>
-                        {
-                            errors.isPublished && <ul>
-                                {errors.isPublished?.type === "required" && <li role="alert">{errors.isPublished?.message}</li>}
-                            </ul>
-                        }
-                    </div>
-                }
-
-            </form>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(() => { })} className={`${username === null ? `bg-gray-50 mt-8 rounded-xl` : null} flex sm:flex-row flex-col sm:justify-around justify-center items-center shadow-md p-1 sm:space-x-4 space-y-2 max-w-full  dark:bg-transparent`}  >
+                    <FormField
+                        control={form.control}
+                        name="sortBy"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className="flex flex-row justify-start items-center max-w-64">
+                                    <FormLabel className="w-24">Sort By</FormLabel>
+                                    <Select
+                                        onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a value to display" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                {/* <SelectLabel>Sort By</SelectLabel> */}
+                                                <SelectItem value="title" >Title</SelectItem>
+                                                <SelectItem value="description">Description</SelectItem>
+                                                <SelectItem value="duration">Duration</SelectItem>
+                                                <SelectItem value="views">Views</SelectItem>
+                                                <SelectItem value="createdAt">Upload Date</SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="sortType"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className="flex flex-row justify-start items-center max-w-64">
+                                    <FormLabel className="w-24">Sort Type</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a value to display" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                {/* <SelectLabel>Sort By</SelectLabel> */}
+                                                <SelectItem value="asc" >Ascending</SelectItem>
+                                                <SelectItem value="desc">Descending</SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="limit"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className="flex flex-row justify-start items-center max-w-64">
+                                    <FormLabel className="w-24">Limit</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a value to display" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                {/* <SelectLabel>Sort By</SelectLabel> */}
+                                                <SelectItem value="1">1</SelectItem>
+                                                <SelectItem value="2">2</SelectItem>
+                                                <SelectItem value="3">3</SelectItem>
+                                                <SelectItem value="4">4</SelectItem>
+                                                <SelectItem value="5">5</SelectItem>
+                                                <SelectItem value="6">6</SelectItem>
+                                                <SelectItem value="8">8</SelectItem>
+                                                <SelectItem value="10">10</SelectItem>
+                                                <SelectItem value="15">15</SelectItem>
+                                                <SelectItem value="20">20</SelectItem>
+                                                <SelectItem value="30">30</SelectItem>
+                                                <SelectItem value="40">40</SelectItem>
+                                                <SelectItem value="50">50</SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    {authStatus && username !== null && user?.data?.username === username &&
+                        <FormField
+                            control={form.control}
+                            name="isPublished"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <div className="flex flex-row justify-start items-center max-w-64">
+                                        <FormLabel className="w-24">Sort Type</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select a value to display" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    {/* <SelectLabel>Sort By</SelectLabel> */}
+                                                    <SelectItem value={true}>Published</SelectItem>
+                                                    <SelectItem value={false}>Unpublished</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />}
+                </form>
+            </Form>
             {error && <p className="text-red-600 m-3 p-3 text-center">{error}</p>}
 
             <div className=" grid grid-flow-row sm:grid-cols-2 md:grid-cols-4 grid-cols-1 gap-4 my-16">
                 {allVideos && allVideos?.data?.videos && allVideos?.data?.videos?.length !== 0 ?
                     (allVideos?.data?.videos?.map((videoDetails) => (
-                        <div key={videoDetails?._id} className="max-w-72 hover:scale-[1.01] ">
+                        <div key={videoDetails?._id} className="sm:max-w-72 hover:scale-[1.01] ">
                             <Link to={`/watch?v=${encodeURIComponent(videoDetails?._id)}`}>
 
                                 <div className="relative">
@@ -193,13 +264,23 @@ function GetVideos({ username = null }) {
                                 {
                                     username === null ? (
                                         <div className="active:scale-95" onClick={() => navigate(`/${videoDetails?.ownerOfVideo?.username}/videos`)}>
-                                            <img src={videoDetails?.ownerOfVideo?.avatar?.secure_url} alt="avatar image"
-                                                className="object-cover sm:size-10 md:size-12 size-8 rounded-full " />
+                                            <Avatar className="max-w-[120px] h-14 w-14">
+                                                <AvatarImage src={videoDetails?.ownerOfVideo?.avatar?.secure_url} />
+                                                <AvatarFallback>CN</AvatarFallback>
+                                            </Avatar>
+
                                         </div>
                                     ) : null
                                 }
                                 <div className="grow">
-                                    <div className="font-semibold text-lg text-left px-2 pt-2">{videoDetails?.title}</div>
+                                    <div className="flex flex-row justify-between items-center space-x-4 pt-2">
+                                        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight px-2">
+                                            {videoDetails?.title}
+                                        </h4>
+                                            <div className="">
+                                            <AddToPlaylist />
+                                            </div>
+                                    </div>
                                     {
                                         username === null ? (
                                             <div onClick={() => navigate(`/${videoDetails?.ownerOfVideo?.username}/videos`)}>
@@ -207,7 +288,7 @@ function GetVideos({ username = null }) {
                                             </div>
                                         ) : null
                                     }
-                                    <div className="px-2 pb-2 flex flex-row justify-between items-center w-full">
+                                    <div className="px-2 pb-2 flex flex-row justify-between items-center w-full text-sm">
                                         <div>{handleViews(videoDetails?.views)}</div>
                                         <div>{handleUploadDate(videoDetails?.createdAt)}</div>
                                     </div>
@@ -215,7 +296,7 @@ function GetVideos({ username = null }) {
                             </div>
 
                         </div>))
-                    ) : (<div>{allVideos.message || "No videos to show"}</div>)
+                    ) : (<div>{"No videos to show"}</div>)
                 }
             </div>
             <div className="bg-red-600 p-1 text-white flex flex-row justify-center items-center">
@@ -229,7 +310,15 @@ function GetVideos({ username = null }) {
                 />}
             </div>
         </div>
-    ) : (<div>...Loading</div>)
+    ) : (
+        <div className=" flex flex-col justify-center items-center w-full h-svh space-y-3">
+            <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+            <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+            </div>
+        </div>
+    )
 }
 
 export default GetVideos

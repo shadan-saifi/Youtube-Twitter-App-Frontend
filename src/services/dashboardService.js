@@ -27,7 +27,7 @@ async function getChannelVideos({
     sortBy,
     sortType,
     isPublished,
-    username,
+    username, 
     query
 }) {
     try {

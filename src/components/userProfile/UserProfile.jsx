@@ -3,14 +3,16 @@ import { ToggleSubscription } from "../index.js"
 import { getUserChannelProfile } from "../../services/userService.js"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import CameraIcon from "../icons/cameraIconForAvatarChange.jsx"
+import { Skeleton } from "../ui/skeleton.jsx"
 
 
 function UserProfile({ username }) {
     const [userProfile, setUserProfile] = useState("")
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
-    const [isSubscribed, setIsSubscribed] = useState(false)
-
+    const [isSubscribed, setIsSubscribed] = useState(null)
     const user = useSelector((state) => state.auth.userData);
 
 
@@ -19,40 +21,32 @@ function UserProfile({ username }) {
             try {
                 setLoading(true)
                 const response = await getUserChannelProfile({ username })
+                console.log("response", response);
                 if (response) {
                     setUserProfile(response)
-                    setIsSubscribed(response.data.isSubscribed)
+                    setIsSubscribed(response?.data?.isSubscribed)
+                    console.log("response?.data?.isSubscribed", response?.data?.isSubscribed);
                 }
                 setLoading(false)
 
             } catch (error) {
-                setError(error.response?.data?.message || "An error occurred");
+                setError(error.response?.data?.message || "An error occurred white getting user channel profile");
                 setLoading(false)
             }
         })()
     }, [username])
-    const handleSubscriptionChange = (newSubscriptionStatus) => {
-        setIsSubscribed(newSubscriptionStatus);
-    };
 
     return !loading ? (
         <div>
             {
                 userProfile && (
-                    <div className="flex flex-col justify-between">
-                        <Link to={`/channel/user/${user?.data?.username}/edit/images`} className="relative w-full aspect-[5/1] overflow-hidden rounded-3xl">
+                    <div className="flex flex-col justify-between mt-3">
+                        <Link to={`/channel/user/${user?.data?.username}/edit/images`} className="relative w-full aspect-[5/1] overflow-hidden rounded-3xl ">
 
                             <div className="absolute inset-0 flex items-center justify-center object-cover
                                 w-full aspect-[5/1] overflow-hidden rounded-3xl bg-white bg-opacity-0 
-                                transition-opacity duration-300 hover:bg-opacity-50 opacity-0 hover:opacity-100">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="sm:w-8 w-6 sm:h-8 h-6 absolute text-white"
-                                    viewBox="0 0 24 24"
-                                    focusable="false"
-                                >
-                                    <path d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,8c-2.21,0-4,1.79-4,4s1.79,4,4,4s4-1.79,4-4 S14.21,8,12,8L12,8z M14.59,4l2,2H21v12H3V6h4.41l2-2H14.59 M15,3H9L7,5H2v14h20V5h-5L15,3L15,3z"></path>
-                                </svg>
+                                transition-opacity duration-300 hover:bg-opacity-50 opacity-0 hover:opacity-100 dark:hover:bg-opacity-20">
+                                <CameraIcon />
                             </div>
                             <img src={userProfile?.data?.coverImage?.secure_url} alt="Cover Image"
                                 className="object-cover w-full h-full" />
@@ -62,15 +56,8 @@ function UserProfile({ username }) {
                             <Link to={`/channel/user/${user?.data?.username}/edit/images`} className="relative">
                                 <div className="absolute inset-0 flex items-center justify-center object-cover 
                                 aspect-square rounded-full md:max-w-64 sm:max-w-48 max-w-36 mt-2
-                                 bg-white bg-opacity-0 transition-opacity duration-300 hover:bg-opacity-50 opacity-0 hover:opacity-100">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="sm:w-8 w-6 sm:h-8 h-6 absolute text-white"
-                                        viewBox="0 0 24 24"
-                                        focusable="false"
-                                    >
-                                        <path d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,8c-2.21,0-4,1.79-4,4s1.79,4,4,4s4-1.79,4-4 S14.21,8,12,8L12,8z M14.59,4l2,2H21v12H3V6h4.41l2-2H14.59 M15,3H9L7,5H2v14h20V5h-5L15,3L15,3z"></path>
-                                    </svg>
+                                 bg-white bg-opacity-0 transition-opacity duration-300 hover:bg-opacity-50 opacity-0 hover:opacity-100 dark:hover:bg-opacity-20">
+                                    <CameraIcon />
                                 </div>
                                 <img
                                     src={userProfile?.data?.avatar?.secure_url}
@@ -92,7 +79,7 @@ function UserProfile({ username }) {
                                 </div>
 
                                 <div>
-                                    <ToggleSubscription isSubscribed={isSubscribed} username={username} onSubscriptionChange={handleSubscriptionChange} />
+                                    <ToggleSubscription isSubscribed={isSubscribed} setIsSubscribed={setIsSubscribed} username={username} />
                                 </div>
 
 
@@ -105,6 +92,12 @@ function UserProfile({ username }) {
 
             }
         </div>
-    ) : (<div>...Loading</div>)
+    ) : <div className=" flex flex-col justify-center items-center w-full h-svh space-y-3">
+        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+        <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+        </div>
+    </div>
 }
 export default UserProfile

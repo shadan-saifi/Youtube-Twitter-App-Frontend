@@ -163,6 +163,6 @@ export {
     deleteVideo,
     togglePublishVideo,
     getUserSearchedVideos,
-    getAllVideos,
+    getAllVideos, 
     getSearchedVideos
 }

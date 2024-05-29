@@ -74,7 +74,7 @@ async function getUserPlaylists({ username }) {
         return handleResponse(response)
 
     } catch (error) {
-        throw error
+        throw error 
     }
 }
 

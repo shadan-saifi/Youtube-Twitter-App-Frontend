@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { updateAvatar } from '../../services/userService';
 import { useNavigate } from 'react-router-dom';
-import InputBox from '../InputBox';
+import { Input } from "@/components/ui/input"
+import { Button } from '../ui/button';
+import { Label } from '../ui/label';
+
 
 function EditChannelAvatar({ username, user }) {
     const [error, setError] = useState("")
@@ -29,11 +32,12 @@ function EditChannelAvatar({ username, user }) {
         <div className='w-full ml-12 '>
             {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
             <form onSubmit={handleSubmit(submit)}
-                className='w-full flex flex-col justify-start items-start'
+                className='w-full flex flex-col justify-start items-start space-y-2'
             >
-                <div>
-                    <InputBox
-                        label="Avatar(max-size=2MB,aspect-ratio=1:1):"
+                <div className='space-y-2'>
+                    <Label htmlFor="avatar">Avatar(max-size=2MB,aspect-ratio=1:1):</Label>
+                    <Input
+                        id="avatar"
                         type="file"
                         alt="Thumbnail"
                         accept="image/*"
@@ -57,15 +61,15 @@ function EditChannelAvatar({ username, user }) {
                             {errors.avatar.type === "validate" && <li role="alert">{errors.avatar.message}</li>}
                         </ul>
                     )}
-                     {avatarPreview ? (
+                     {
+                     avatarPreview ? (
                         <img src={avatarPreview} className=" aspect-square max-w-72  object-cover my-2" />
                     ) : (
 
                         <img src={user?.avatar?.secure_url} alt="Avatar Image" className='my-2 max-w-72 aspect-square object-cover' />
                     )}
                 </div>
-                <button type="submit" className=" rounded-md px-2 py-1 my-8 
-                 text-xl text-blue-800 font-sans font-semibold hover:bg-gray-300 active:scale-95">Change</button>
+                <Button type="submit" variant="outline">Change</Button>
             </form>
         </div>
     );
