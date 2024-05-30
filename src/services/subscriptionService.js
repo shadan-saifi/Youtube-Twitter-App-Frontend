@@ -1,5 +1,7 @@
 import axios from "axios";
+
 axios.defaults.headers.post["Content-Type"] = "application/json";
+axios.defaults.baseURL =  `${import.meta.env.VITE_API_URL}`;
 
 async function handleResponse(response) {
     if (response.status >= 200 && response.status < 300) {
@@ -13,7 +15,6 @@ async function toggleSubscription({username}) {
     try {
         const response = await axios.post(`/api/v1/subscriptions/c/${username}`)
         const data =await handleResponse(response)
-        console.log('Backend Response.data:', data);
         return data
     } catch (error) {
         throw error

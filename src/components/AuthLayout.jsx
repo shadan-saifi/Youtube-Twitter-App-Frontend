@@ -17,7 +17,7 @@ function AuthLayout({children,authorization}){
         setLoading(false)
     },[loading,authorization,authStatus,navigate])
 
-    return loading ?(<div>...Loading</div>):(<div>{children}</div>)
+    return loading ?(<div>...Loading</div>):(<div className="w-full h-full my-12">{children}</div>)
 }
 
 export default AuthLayout

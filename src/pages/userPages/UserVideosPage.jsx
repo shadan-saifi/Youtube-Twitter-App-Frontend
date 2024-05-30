@@ -1,5 +1,5 @@
 import { NavLink, useParams } from "react-router-dom";
-import { GetAllUserVideos, InputSearch, UserProfile } from "../../components";
+import { GetVideos } from "../../components";
 
 
 
@@ -11,7 +11,7 @@ function UserVideosPage() {
     return (
         <div>
             
-        <GetAllUserVideos username={username} />
+        <GetVideos username={username} />
             
         </div>
     )

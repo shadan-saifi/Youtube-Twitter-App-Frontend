@@ -1,6 +1,7 @@
 import axios from "axios"
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
+axios.defaults.baseURL = `${import.meta.env.VITE_API_URL}`;
 
 async function handleResponse(response) {
     if (response.status >= 200 && response.status < 300) {
@@ -10,13 +11,14 @@ async function handleResponse(response) {
     }
 }
 
-async function publishVideo({ title, description, videoFile, thumbnail }) {
+async function publishVideo({ title, description,isPublished, videoFile, thumbnail }) {
     try {
         const formData = new FormData()
         formData.append("title", title)
         formData.append("description", description)
-        formData.append("videoFile", videoFile)
-        formData.append("thumbnail", thumbnail)
+        formData.append("isPublished", isPublished)
+        formData.append("videoFile", videoFile[0])
+        formData.append("thumbnail", thumbnail[0])
 
         const response = await axios.post("/api/v1/videos", formData, {
             headers: {
@@ -29,7 +31,7 @@ async function publishVideo({ title, description, videoFile, thumbnail }) {
         throw error
     }
 }
-async function getAllUserVideos({ page, limit, sortBy, sortType,isPublished, username }) {
+async function getAllUserVideos({ page, limit, sortBy, sortType, isPublished, username }) {
     try {
         const response = await axios.get("/api/v1/videos", {
             params: {
@@ -48,6 +50,23 @@ async function getAllUserVideos({ page, limit, sortBy, sortType,isPublished, use
         throw error
     }
 }
+async function getAllVideos({ page, limit, sortBy, sortType }) {
+    try {
+        const response = await axios.get("/api/v1/videos/all-videos", {
+            params: {
+                page,
+                limit,
+                sortBy,
+                sortType,
+            }
+        })
+        return handleResponse(response)
+
+    } catch (error) {
+        console.log("Error while getting all Video", error);
+        throw error
+    }
+}
 
 async function getVideoById({ videoId }) {
     try {
@@ -59,9 +78,18 @@ async function getVideoById({ videoId }) {
     }
 }
 
-async function updateVideo({ videoId }) {
+async function updateVideo({ title, description,isPublished,videoId, thumbnail }) {
     try {
-        const response = await axios.patch(`/api/v1/videos/${videoId}`)
+        const formData = new FormData()
+        formData.append("title", title)
+        formData.append("description", description)
+        formData.append("isPublished", isPublished)
+        formData.append("thumbnail", thumbnail[0])
+        const response = await axios.patch(`/api/v1/videos/${videoId}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        })
         return handleResponse(response)
     } catch (error) {
         console.log("Error while updating Video", error);
@@ -89,9 +117,9 @@ async function togglePublishVideo({ videoId }) {
     }
 }
 
-async function getUserSearchedVideos({ page, limit, sortBy, sortType,isPublished, username, query, }) {
+async function getUserSearchedVideos({ page, limit, sortBy, sortType, isPublished, username, query, }) {
     try {
-        const response = await axios.get("/api/v1/videos/search-videos", {
+        const response = await axios.get("/api/v1/videos/user-search-videos", {
             params: {
                 page,
                 limit,
@@ -109,4 +137,32 @@ async function getUserSearchedVideos({ page, limit, sortBy, sortType,isPublished
     }
 }
 
-export { publishVideo, getAllUserVideos, getVideoById, updateVideo, deleteVideo, togglePublishVideo, getUserSearchedVideos }
+async function getSearchedVideos({ page, limit, sortBy, sortType, query, }) {
+    try {
+        const response = await axios.get("/api/v1/videos/search-videos", {
+            params: {
+                page,
+                limit,
+                sortBy,
+                sortType,
+                query
+            }
+        })
+        return handleResponse(response)
+    } catch (error) {
+        console.log("Error while getting seached Video", error);
+        throw error
+    }
+}
+
+export {
+    publishVideo,
+    getAllUserVideos,
+    getVideoById,
+    updateVideo,
+    deleteVideo,
+    togglePublishVideo,
+    getUserSearchedVideos,
+    getAllVideos, 
+    getSearchedVideos
+}

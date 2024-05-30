@@ -1,13 +1,12 @@
 import { forwardRef, useState } from "react";
 import { toggleSubscription } from "../../services/subscriptionService";
-import Button from "../Button";
+import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import React from "react";
 
 
-function ToggleSubscription({ isSubscribed, username, onSubscriptionChange }) {
-
+function ToggleSubscription({ isSubscribed, username, setIsSubscribed }) {
     const authStatus = useSelector((state) => state.auth.status);
     const user = useSelector((state) => state.auth.userData);
     const [error, setError] = useState("");
@@ -15,35 +14,38 @@ function ToggleSubscription({ isSubscribed, username, onSubscriptionChange }) {
     const handleSubscription = async () => {
         try {
             const response = await toggleSubscription({ username });
-            if (response) onSubscriptionChange(!isSubscribed);
-
+            console.log("response",response);
+            if (response?.success===true && response?.message==="Subscribed to channel successfully"){
+                setIsSubscribed(true);
+            }else{
+                setIsSubscribed(false)
+            }
         } catch (error) {
-            console.log(error.response?.data?.message || "An error occurred");
-            setError(error.response?.data?.message || "An error occurred");
+            setError(error.response?.data?.message || "An error occurred while subscribing");
         }
     }
-
+   
     return (
         <div>
-            {authStatus && user.data.username !== username && (
-                <button className={`active:scale-95 active:border w-32 py-2 mt-6 rounded-2xl text-white font-semibold ${isSubscribed ? " bg-blue-500 hover:bg-blue-400" : " bg-red-500 hover:bg-red-400"}`}
+            {authStatus && user?.data?.username !== username && (
+                <Button className={`${isSubscribed ? " bg-blue-500 hover:bg-blue-400" : " bg-red-500 hover:bg-red-400"}`}
                     onClick={handleSubscription}
                 >
                     {isSubscribed ? "Subscribed" : "Subscribe"}
-                </button>
+                </Button>
             )}
             {!authStatus && (
-                <Button className="bg-red-500 hover:bg-red-400 active:scale-95 active:border w-full mt-6 max-w-64 text-white font-semibold " onClick={() => alert("Please login to subscribe.")}>
+                <Button variant="destructive" onClick={() => alert("Please login to subscribe.")}>
                     Subscribe
                 </Button>
             )}
             {authStatus && user.data.username === username && (
                 <div className="flex  gap-4 font-semibold flex-row justify-start items-center mt-6">
-                    <Link to="/edit-profile" >
-                        <Button  className=" text-white bg-blue-500 hover:bg-blue-600 hover:border active:scale-95 rounded-lg w-full max-w-64">Edit</Button>
+                    <Link to={`/channel/user/${user?.data?.username}/edit/details`}>
+                        <Button variant="ghost" > Edit</Button>
                     </Link>
-                    <Link to="/manage-videos">
-                        <Button  className="text-white bg-blue-500 hover:bg-blue-600 hover:border active:scale-95 rounded-lg w-full max-w-64 h-[40px]">Manage Videos</Button>
+                    <Link to="/channel/videos">
+                        <Button  variant="ghost">Manage Videos</Button>
                     </Link>
                 </div>
             )}
