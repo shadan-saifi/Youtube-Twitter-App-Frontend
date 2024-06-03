@@ -19,7 +19,21 @@ import {
 import { ModeToggle } from "../ui/ModeToggle";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-
+import {
+    Menubar,
+    MenubarCheckboxItem,
+    MenubarContent,
+    MenubarItem,
+    MenubarMenu,
+    MenubarRadioGroup,
+    MenubarRadioItem,
+    MenubarSeparator,
+    MenubarShortcut,
+    MenubarSub,
+    MenubarSubContent,
+    MenubarSubTrigger,
+    MenubarTrigger,
+} from "@/components/ui/menubar"
 
 function Header() {
 
@@ -63,112 +77,95 @@ function Header() {
 
     return (
         <header >
-            <Container className=" bg-gradient-to-r from-cyan-300 to-blue-300 rounded-lg py-2 dark:from-gray-500 dark:to-gray-300">
-                <nav className="flex flex-row justify-between items-center" >
-                    <div className="flex-auto max-w-[120px] mr-12">
+
+            <Menubar className="flex flex-row justify-between items-center bg-gradient-to-r from-cyan-300 to-blue-300 rounded-lg p-2 dark:from-gray-500 dark:to-gray-300 sm:h-16 h-12 w-full">
+                <MenubarMenu>
+                    <div className="flex-auto max-w-[120px] sm:mr-12 mr-8">
                         <Link to="/">
                             <Logo />
                         </Link>
                     </div>
-                    <ModeToggle/>
-                    <ul className="flex sm:space-x-2 md:space-x-8 lg:space-x-24 xl:space-x-36 2xl:space-x-48 space-x-4 flex-row justify-between items-center text-lg" >
-                        {
-                            navItems.map((item) => (
-                                <li key={item.name} >
-                                    {item.active && item.name !== "Search" && (
-                                        <Button variant="ghost" onClick={() => navigate(item.to)}>{item.name}</Button>
-                                    )}
-                                    {item.name === "Search" && (
-                                        <div className="divide-x divide-gray-500 grow hidden sm:flex flex-row justify-center items-center ">
-                                            <Input
-                                                type="search"
-                                                placeholder="Search the channel videos"
-                                                autoCorrect="off"
-                                                spellCheck="false"
-                                                value={query}
-                                                onChange={(e) => setQuery(e.target.value)}
-                                                onKeyDown={handleKeyDown}
-                                               className="dark:bg-off-white"
-                                            />
-                                            <Button onClick={handleSearch}>{item.name}</Button>
-                                        </div>
-                                    )}
-                                </li>
-                            ))
+                </MenubarMenu>
+                <MenubarMenu>
+                    <ModeToggle />
+                </MenubarMenu>
+                {navItems.map((item) => (
+                    <MenubarMenu key={item.name}>
+                        {item.active && item.name !== "Search" && (
+                            <Button variant="ghost" onClick={() => navigate(item.to)} className=" text-wrap w-12">{item.name}</Button>
+                        )}
+                        {item.name === "Search" && (
+                            <div className="divide-x divide-gray-500 hidden sm:flex flex-row justify-center items-center ">
+                                <Input
+                                    type="search"
+                                    placeholder="Search the channel videos"
+                                    autoCorrect="off"
+                                    spellCheck="false"
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                    className="dark:bg-off-white"
+                                />
+                                <Button onClick={handleSearch}>{item.name}</Button>
+                            </div>
+                        )}
+                    </MenubarMenu>
+                ))
+                }
+                {authStatus &&
+                    <MenubarMenu>
+                        <MenubarTrigger>
+                            <div>
+                                <VideoIcon className="sm:w-8 sm:h-8  text-red-600" />
+                                <span className="sm:text-sm text-xs font-extralight text-red-600 text-center">Upload</span>
+                            </div>
+                        </MenubarTrigger>
+                        <MenubarContent>
+                            {/* <MenubarItem>
+                                <Link to={`/${user?.data?.username}/tweets`} >Create Tweet</Link>
+                            </MenubarItem>
+                            <MenubarSeparator /> */}
+                            <MenubarItem>
+                                <Link to={'/channel/uploadvideo'} >Upload Video</Link>
+                            </MenubarItem>
+                        </MenubarContent>
+                    </MenubarMenu>
+                }
+                {authStatus &&
+                    <MenubarMenu>
+                        <MenubarTrigger>
+                            <Avatar className="max-w-[120px] sm:h-14 h-10 sm:w-14 w-10">
+                                <AvatarImage src={user?.data?.avatar?.secure_url} />
+                                <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                        </MenubarTrigger>
+                        <MenubarContent>
+                            <li className="flex flex-row justify-center items-center">
+                                <Avatar>
+                                    <AvatarImage src={user?.data?.avatar?.secure_url} />
+                                    <AvatarFallback>CN</AvatarFallback>
+                                </Avatar>
 
-                        }
-                    </ul>
-                    <div className="flex flex-row justify-between items-center sm:space-x-2 md:space-x-8 lg:space-x-24 xl:space-x-36 2xl:space-x-48 space-x-4 " >
-                        <div>
-                            {
-                                authStatus && (
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger>
-                                            <div>
-                                                <VideoIcon className="w-8 h-8 text-red-600" />
-                                                <span className="text-sm font-extralight text-red-600 text-center">Upload</span>
-                                            </div>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent>
-                                            <DropdownMenuLabel>Upload</DropdownMenuLabel>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuItem>
-                                                <Link to={'/channel/uploadvideo'} >Upload Video</Link>
-                                            </DropdownMenuItem>
-                                            {/* <DropdownMenuItem>
-                                            <Link to={`/${user?.data?.username}/tweets`} >Create Tweet</Link>
-                                        </DropdownMenuItem> */}
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                )
-                            }
-                        </div>
-                        <div>
-                            {
-                                authStatus &&
-                                (
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger>
-                                            <Avatar className="max-w-[120px] h-14 w-14">
-                                                <AvatarImage src={user?.data?.avatar?.secure_url} />
-                                                <AvatarFallback>CN</AvatarFallback>
-                                            </Avatar>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent>
-                                            <DropdownMenuLabel >
-                                                <li className="flex flex-row justify-center items-center">
-                                                    <Avatar>
-                                                        <AvatarImage src={user?.data?.avatar?.secure_url} />
-                                                        <AvatarFallback>CN</AvatarFallback>
-                                                    </Avatar>
-
-                                                    <div className="p-2 flex flex-col justify-between items-center">
-                                                        <div className="text-lg font-semibold">{user?.data?.username}</div>
-                                                        <div className=" font-medium">{user?.data?.email}</div>
-                                                    </div>
-                                                </li>
-                                            </DropdownMenuLabel>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuGroup>
-                                                <DropdownMenuItem>
-                                                    <Link to={`/${user?.data?.username}/videos`} >View your channel</Link>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem>
-                                                    <Link to={`/channel/dashboard`} >View your dashboard</Link>
-                                                </DropdownMenuItem>
-                                            </DropdownMenuGroup>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuGroup className="text-center">
-                                                <LogoutBtn />
-                                            </DropdownMenuGroup>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                )
-                            }
-                        </div>
-                    </div>
-                </nav>
-            </Container>
+                                <div className="p-2 flex flex-col justify-between items-center">
+                                    <div className="text-lg font-semibold">{user?.data?.username}</div>
+                                    <div className=" font-medium">{user?.data?.email}</div>
+                                </div>
+                            </li>
+                            <MenubarSeparator />
+                            <MenubarItem>
+                                <Link to={`/${user?.data?.username}/videos`} >View your channel</Link>
+                            </MenubarItem>
+                            <MenubarItem>
+                                <Link to={`/channel/dashboard`} >View your dashboard</Link>
+                            </MenubarItem>
+                            <MenubarSeparator />
+                            <MenubarItem>
+                                <LogoutBtn />
+                            </MenubarItem>
+                        </MenubarContent>
+                    </MenubarMenu>
+                }
+            </Menubar>
         </header>
     )
 

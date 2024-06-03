@@ -36,7 +36,7 @@ function Login() {
             if (session?.data) {
                 const userData = await getCurrentUser();
                 console.log("userData", userData);
-                if (userData.data) {
+                if (userData?.data) {
                     dispatch(authlogin({ userData }));
                     navigate("/")
                 }
