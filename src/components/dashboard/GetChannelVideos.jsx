@@ -63,7 +63,7 @@ function GetChannelVideos({ username }) {
                 sortBy: z.string().min(1, "This field is required"),
                 sortType: z.string().min(1, "This field is required"),
                 limit: z.number().int().min(1, "This field is required"),
-                // isPublished: z.boolean().optional(),
+                isPublished: z.string().optional(),
                 query: z.string().min(2, {
                     message: "Username must be at least 2 characters.",
                 }),
@@ -72,7 +72,7 @@ function GetChannelVideos({ username }) {
         defaultValues: {
             sortBy: sessionStorage.getItem('sortBy') ? JSON.parse(sessionStorage.getItem('sortBy')) : "title",
             sortType: sessionStorage.getItem('sortType') ? JSON.parse(sessionStorage.getItem('sortType')) : "asc",
-            limit: sessionStorage.getItem('limit') ? JSON.parse(sessionStorage.getItem('limit')) : 4,
+            limit: sessionStorage.getItem('limit') ? JSON.parse(sessionStorage.getItem('limit')) : 6,
             isPublished: sessionStorage.getItem('isPublished') ? JSON.parse(sessionStorage.getItem('isPublished')) : "",
             query: sessionStorage.getItem('query') ? JSON.parse(sessionStorage.getItem('query')) : ""
         }
@@ -249,8 +249,9 @@ function GetChannelVideos({ username }) {
                                         <SelectContent>
                                             <SelectGroup>
                                                 {/* <SelectLabel>Sort By</SelectLabel> */}
-                                                <SelectItem value={true}>Published</SelectItem>
-                                                <SelectItem value={false}>Unpublished</SelectItem>
+                                                <SelectItem >All</SelectItem>
+                                                <SelectItem value="true">Published</SelectItem>
+                                                <SelectItem value="false">Unpublished</SelectItem>
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>

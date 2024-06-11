@@ -14,7 +14,7 @@ import EditChannelDeatilsPage from "./uploadAndEditPages/EditChannelDeatilsPage.
 import EditChannelImagesPage from "./uploadAndEditPages/EditChannelImagesPage.jsx";
 import GetDashboardStatsPage from "./dashboardPages/GetDashboardStatsPage.jsx";
 import GetChannnelVideosPage from "./dashboardPages/GetChannnelVideosPage.jsx";
-
+import GetChannelPlaylistsPage from "./dashboardPages/GetChannelPlaylistsPage";
 
 export {LoginPage,
     HomeVideoPage,
@@ -31,6 +31,6 @@ export {LoginPage,
     EditChannelDeatilsPage,
    GetDashboardStatsPage,
    GetChannnelVideosPage,
-   EditChannelImagesPage
-
+   EditChannelImagesPage,
+  GetChannelPlaylistsPage,
 }

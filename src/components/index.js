@@ -31,8 +31,12 @@ import AddVideoComment from "./comments/AddVideoComment.jsx";
 import DeleteVideoComment from "./comments/DeleteVideoComment.jsx";
 import GetAndUpdateVideoComment from "./comments/GetAndUpdateVideoComment.jsx";
 import AddToPlaylist from "./playlist/AddToPlaylist";
+import ListPlaylists from "./playlist/ListPlaylists";
+import CreateAndUpdatePlaylist from "./playlist/CreateAndUpdatePlaylist";
+import DeletePlaylist from "./playlist/DeletePlaylist";
+import GetChannelPlaylists from "./dashboard/GetChannelPlaylists";
 export { Header,Footer, Container, AuthLayout, Button, InputBox, Login, Select, CreateAccount, UserProfile, Pagination, ToggleSubscription,
  VideoById, VideoJS, VideoComments, VideoDescription,VideoDetails, ToggleLike, GetVideos, GetAllUserPlaylists, GetPlaylistDetails,GetPlaylistVideos,
  UploadAndEditVideo, DashboardSidebar,GetChannelVideos,GetDashboardStats, EditChannelDetails,EditChannelAvatar,EditChannelCoverImage,AddVideoComment,
- DeleteVideoComment,GetAndUpdateVideoComment, AddToPlaylist
+ DeleteVideoComment,GetAndUpdateVideoComment, AddToPlaylist,ListPlaylists,CreateAndUpdatePlaylist,DeletePlaylist,GetChannelPlaylists
  }

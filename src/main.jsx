@@ -5,7 +5,7 @@ import './index.css'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { CreateAccountPage, DashboardPage, EditChannelDeatilsPage, EditChannelImagesPage, EditVideoPage, GetChannnelVideosPage, GetDashboardStatsPage, GetPlaylistPage, HomeVideoPage, LoginPage, UploadVideoPage,  UserPage, UserPlaylistPage, UserSearchVideosPage, UserVideosPage, VideoByIdPage } from './pages/index.js'
+import { CreateAccountPage, DashboardPage, EditChannelDeatilsPage, EditChannelImagesPage, EditVideoPage, GetChannelPlaylistsPage, GetChannnelVideosPage, GetDashboardStatsPage, GetPlaylistPage, HomeVideoPage, LoginPage, UploadVideoPage,  UserPage, UserPlaylistPage, UserSearchVideosPage, UserVideosPage, VideoByIdPage } from './pages/index.js'
 import { AuthLayout } from './components/index.js'
 
 
@@ -76,6 +76,10 @@ const router = createBrowserRouter([
           {
             path: "/channel/videos",
             element: (<AuthLayout authorization={true} ><GetChannnelVideosPage /></AuthLayout>),
+          },
+          {
+            path: "/channel/playlists",
+            element: (<AuthLayout authorization={true} ><GetChannelPlaylistsPage /></AuthLayout>),
           },
           {
             path: "/channel/:videoId/editvideo",
