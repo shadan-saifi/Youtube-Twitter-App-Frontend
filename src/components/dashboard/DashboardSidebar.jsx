@@ -32,7 +32,7 @@ function DashboardSidebar(props) {
                         </div>
                         <span>Your Videos</span>
                     </Link>
-                    <Link to={"/"} className='hover:bg-cyan-400 dark:hover:bg-gray-800 hover:text-white p-1 rounded-lg active:scale-95 flex flex-row justify-start items-center gap-4'>
+                    <Link to={"/channel/playlists"} className='hover:bg-cyan-400 dark:hover:bg-gray-800 hover:text-white p-1 rounded-lg active:scale-95 flex flex-row justify-start items-center gap-4'>
                         <div>
                             <PlaylistIcon />
                         </div>
@@ -44,12 +44,12 @@ function DashboardSidebar(props) {
                         </div>
                         <span>Your Posts</span>
                     </Link> */}
-                    <Link to={"/"} className='hover:bg-cyan-400 dark:hover:bg-gray-800 hover:text-white p-1 rounded-lg active:scale-95 flex flex-row justify-start items-center gap-4'>
+                    {/* <Link to={"/"} className='hover:bg-cyan-400 dark:hover:bg-gray-800 hover:text-white p-1 rounded-lg active:scale-95 flex flex-row justify-start items-center gap-4'>
                         <div>
                             <CommentIcon />
                         </div>
                         <span>Comments</span>
-                    </Link>
+                    </Link> */}
                     <Link to={'/channel/uploadvideo'} className='hover:bg-cyan-400 dark:hover:bg-gray-800 hover:text-white p-1 rounded-lg active:scale-95 flex flex-row justify-start items-center gap-4'>
                         <div>
                             <UploadVideoIcon />

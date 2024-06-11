@@ -1,7 +1,5 @@
+import { deletePlaylist, getUserPlaylists } from '@/services/playlistService';
 import React, { useCallback, useEffect, useState } from 'react';
-import { getUserPlaylists } from '../../services/playlistService';
-import { Link } from 'react-router-dom';
-import handleUploadDate from '../../hooks/handleUploadDate';
 import { Skeleton } from '../ui/skeleton';
 import {
     Select,
@@ -35,11 +33,12 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import handleUploadDate from '@/hooks/handleUploadDate';
 import { CreateAndUpdatePlaylist, Pagination } from '..';
-import AddIcon from '../icons/AddIcon';
-
-function GetAllUserPlaylists({ username }) {
+function GetChannelPlaylists({ username }) {
     const [error, setError] = useState("")
+    const [error2, setError2] = useState("")
     const [loading, setLoading] = useState(false)
     const [mssg, setMssg] = useState("")
     const [allPlaylists, setAllPlaylists] = useState([])
@@ -47,6 +46,12 @@ function GetAllUserPlaylists({ username }) {
     const [playlistsPerPage, setPlaylistsPerPage] = useState("")
     const [totalPlaylistsCount, setTotalPlaylistsCount] = useState("")
     const siblingCount = 1;
+
+    const authStatus = useSelector((state) => state.auth.status);
+    const user = useSelector((state) => state.auth.userData);
+    const handlePageChange = (page) => {
+        setCurrentPage(page)
+    }
 
     const form = useForm({
         resolver: zodResolver(
@@ -58,24 +63,20 @@ function GetAllUserPlaylists({ username }) {
             })
         ),
         defaultValues: {
-            sortBy: "name",
-            sortType: "asc",
-            limit: 8,
+            sortBy: sessionStorage.getItem('sortBy') ? JSON.parse(sessionStorage.getItem('sortBy')) : "name",
+            sortType: sessionStorage.getItem('sortType') ? JSON.parse(sessionStorage.getItem('sortType')) : "asc",
+            limit: sessionStorage.getItem('limit') ? JSON.parse(sessionStorage.getItem('limit')) : 6,
+            isPublished: sessionStorage.getItem('isPublished') ? JSON.parse(sessionStorage.getItem('isPublished')) : "",
         }
-    })
-    const authStatus = useSelector((state) => state.auth.status);
-    const user = useSelector((state) => state.auth.userData);
 
-    const handlePageChange = (page) => {
-        setCurrentPage(page)
-    }
+    })
 
     const watchFields = useCallback(() => {
         return {
             sortBy: form.watch("sortBy"),
             sortType: form.watch("sortType"),
             limit: form.watch("limit"),
-            isPublished: form.watch("isPublished")
+            isPublished: form.watch("isPublished"),
         };
     }, [form.watch]);
     useEffect(() => {
@@ -83,7 +84,7 @@ function GetAllUserPlaylists({ username }) {
             try {
                 setLoading(true)
                 const response = await getUserPlaylists({ ...watchFields(), page: currentPage, username })
-                console.log("response of getUserPlaylists", response)
+                console.log("response of getUserPlaylists in dashboard", response)
                 if (response.success === true) {
                     setAllPlaylists(response?.data?.playlists)
                     setTotalPlaylistsCount(response?.data?.totalPlaylists)
@@ -99,8 +100,28 @@ function GetAllUserPlaylists({ username }) {
             ()
     }, [username, currentPage, watchFields().sortBy, watchFields().sortType, watchFields().limit, watchFields().isPublished]);
 
+    useEffect(() => {
+        // Save form data to localStorage
+        sessionStorage.setItem('sortBy', JSON.stringify(watchFields().sortBy));
+        sessionStorage.setItem('sortType', JSON.stringify(watchFields().sortType));
+        sessionStorage.setItem('limit', watchFields().limit);
+        sessionStorage.setItem('isPublished', watchFields().isPublished);
+    }, [watchFields().sortBy, watchFields().sortType, watchFields().limit, watchFields().isPublished]);
+
+    const handleDelete = async (playlistId) => {
+        try {
+            const response = await deletePlaylist({ playlistId })
+            if (response.success === true) {
+                window.location.reload();
+            }
+        } catch (error) {
+            console.log("error while deleting playlist:", error);
+            setError(error.response?.data?.message || "An error occurred while deleting playlist");
+        }
+    }
     return !loading ? (
         <div>
+            {error && <p className="text-red-600 m-3 p-3 text-center">{error}</p>}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(() => { })} className={`${username === null ? `bg-gray-50 mt-8 rounded-xl` : null} flex sm:flex-row flex-col sm:justify-around justify-center items-center shadow-md p-1 sm:space-x-4 space-y-2 max-w-full  dark:bg-transparent`}  >
                     <FormField
@@ -172,7 +193,7 @@ function GetAllUserPlaylists({ username }) {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                        <SelectGroup>
+                                            <SelectGroup>
                                                 {/* <SelectLabel>Sort By</SelectLabel> */}
                                                 <SelectItem value={1}>1</SelectItem>
                                                 <SelectItem value={2}>2</SelectItem>
@@ -187,6 +208,7 @@ function GetAllUserPlaylists({ username }) {
                                                 <SelectItem value={30}>30</SelectItem>
                                                 <SelectItem value={40}>40</SelectItem>
                                                 <SelectItem value={50}>50</SelectItem>
+
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
@@ -225,79 +247,87 @@ function GetAllUserPlaylists({ username }) {
                         />}
                 </form>
             </Form>
-            {authStatus && username !== null && user?.data?.username === username && <Dialog>
-                <DialogTrigger>
-                    <div className='flex flex-row justify-between items-center space-x-2 p-2 hover:bg-blue-300 dark:hover:bg-gray-800 hover:text-white rounded-lg active:scale-95'>
-                        <AddIcon />
-                        <div>Create Playlist</div>
-                    </div>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Fill the following details to create a playlist</DialogTitle>
-                    </DialogHeader>
-                    <span>{mssg}</span>
-                    <div><CreateAndUpdatePlaylist setError={setError} setMssg={setMssg} /></div>
-                </DialogContent>
-            </Dialog>}
-            {error && <p className="text-red-600 m-3 p-3 text-center">{error}</p>}
-            <div className=" grid grid-flow-row sm:grid-cols-2 md:grid-cols-4 grid-cols-1 gap-4 my-16">
-                {
-                    allPlaylists?.length !== 0 ? (
-                        allPlaylists?.map((playlist) => (
-                            <div key={playlist?._id} className="max-w-72 hover:scale-[1.01] ">
-                                <Link to={`/watch?v=${encodeURIComponent(playlist?.allVideos[0]?._id)}&list=${encodeURIComponent(playlist?._id)}`}>
-                                    <div className="relative">
-                                        {playlist?.allVideos[0]?.thumbnail ? <img src={playlist?.allVideos[0]?.thumbnail?.secure_url} alt={playlist?.allVideos[0]?.title}
-                                            className="rounded-2xl aspect-video object-cover"
-                                        /> : <div className='aspect-video rounded-2xl flex flex-row justify-center items-center border'>Playlist is empty</div>}
-                                        <span className="absolute right-3 bottom-1 text-lg text-white px-1  bg-gray-600 bg-opacity-70 rounded-md">
-                                            {playlist?.TotalVideos} Videos</span>
-                                    </div>
-                                </Link>
-                                <div className='flex flex-row justify-between items-start'>
-                                    <div className='m-2 flex flex-col justify-start items-between'>
-                                        <div className='text-lg font-semibold'>{playlist?.name}</div>
-                                        <div className='text-sm'>
-                                            <span className=' bg-gray-200 px-1 rounded-md'>{playlist?.isPublished === true ? "Public" : "Private"}</span>
-                                            <span className='mx-2'>(Playlist)</span>
-                                        </div>
-                                        <Link to={`/playlist?list=${encodeURIComponent(playlist?._id)}`} className='hover:font-semibold hover:text-blue-500 active:scale-95'>
-                                            See full playlist
-                                        </Link>
-                                    </div>
-                                    <div>
-                                    <div className='text-sm mt-3'>Updated {handleUploadDate(playlist?.updatedAt)}</div>
-                                        {/* {
-                                            authStatus && <div className="" onClick={() => setActiveCommentIndex(index === activeCommentIndex ? null : index)}>
-                                                <CreateAndUpdatePlaylist setActiveCommentIndex={setActiveCommentIndex} activeCommentIndex={activeCommentIndex} index={index} playlist={playlist} />
-                                            </div>
-                                        } */}
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (<div>{allPlaylists?.message || "No playlists to show"}</div>)
-                }
-            </div>
-            <div className="bg-red-600 p-1 text-white flex flex-row justify-center items-center">
 
-                {currentPage && <Pagination
-                    onPageChange={handlePageChange}
-                    totalCount={totalPlaylistsCount}
-                    siblingCount={siblingCount}
-                    currentPage={currentPage}
-                    pageSize={playlistsPerPage}
-                />}
-            </div>
-        </div >
-    ) : <div className=" flex flex-col justify-center items-center w-full h-svh space-y-3">
+            {
+                allPlaylists.length !== 0 ? (<div>
+                    <table className=' table-auto w-full border-collapse border border-slate-400'>
+                        <thead className='w-full'>
+                            <tr >
+                                <th className='border border-slate-300 '>Playlists</th>
+                                <th className='border border-slate-300 '>Title</th>
+                                <th className='border border-slate-300 '>Privacy</th>
+                                <th className='border border-slate-300'>Update Date</th>
+
+                            </tr>
+                        </thead>
+                        <tbody className='w-full'>
+                            {
+                                allPlaylists.map((playlist) => (
+                                    <tr key={playlist._id} className=' text-center max-h-6'>
+                                        <td className='max-w-full border border-b-0 border-slate-300 flex sm:flex-row flex-col justify-center items-center '>
+                                            <div>
+                                                {playlist?.allVideos[0]?.thumbnail ?
+                                                    <Link to={`/watch?v=${encodeURIComponent(playlist?.allVideos[0]?._id)}&list=${encodeURIComponent(playlist?._id)}`}>
+                                                        <img src={playlist?.allVideos[0]?.thumbnail?.secure_url} alt={playlist?.allVideos[0]?.title}
+                                                            className='max-w-28 m-2 rounded-md aspect-video object-cover'
+                                                        />
+                                                    </Link>
+                                                    : <div className='w-28 m-2 rounded-md aspect-video object-cover flex flex-row justify-center items-center border'>Playlist is empty</div>}
+                                            </div>
+                                            <div className='flex flex-row justify-evenly items-center w-full space-x-2 mr-2'>
+                                                {authStatus && username !== null && user?.data?.username === username &&
+                                                    <Dialog>
+                                                        <DialogTrigger>
+
+                                                            <div className='inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-95 hover:bg-accent hover:text-accent-foreground p-[10px]'>Update</div>
+                                                        </DialogTrigger>
+                                                        <DialogContent>
+                                                            <DialogHeader>
+                                                                <DialogTitle>Fill the following details to create a playlist</DialogTitle>
+                                                            </DialogHeader>
+                                                            <span>{mssg}</span>
+                                                            {error2 && <p className="text-red-600 m-3 p-3 text-center">{error2}</p>}
+                                                            <div>
+                                                                <CreateAndUpdatePlaylist playlist={playlist} setError={setError2} setMssg={setMssg} />
+                                                            </div>
+                                                        </DialogContent>
+                                                    </Dialog>}
+                                                <Button variant="ghost" onClick={() => handleDelete(playlist._id)}>Delete</Button>
+
+                                            </div>
+                                        </td>
+                                        <td className='border border-slate-300 text-ellipsis border-b-0'>{playlist?.name}</td>
+                                        <td className='border border-slate-300 border-b-0'>{playlist?.isPublished === true ? "Public" : "Private"}</td>
+                                        <td className='border border-slate-300 border-b-0'>{handleUploadDate(playlist?.updatedAt)}</td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr >
+                                <th colSpan="6"> {currentPage && <Pagination
+                                    onPageChange={handlePageChange}
+                                    totalCount={totalPlaylistsCount}
+                                    siblingCount={siblingCount}
+                                    currentPage={currentPage}
+                                    pageSize={playlistsPerPage}
+                                />}
+                                </th>
+
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>) : (<div className='mx-auto text-center my-auto mt-64 text-2xl'>No videos to show</div>)
+            }
+        </div>
+    ) : (<div className=" flex flex-col justify-center items-center w-full h-svh space-y-3">
         <Skeleton className="h-[125px] w-[250px] rounded-xl" />
         <div className="space-y-2">
             <Skeleton className="h-4 w-[250px]" />
             <Skeleton className="h-4 w-[200px]" />
         </div>
     </div>
+    )
 }
 
-export default GetAllUserPlaylists;
+export default GetChannelPlaylists;

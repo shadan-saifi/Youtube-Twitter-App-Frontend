@@ -12,7 +12,7 @@ function UserProfile({ username }) {
     const [userProfile, setUserProfile] = useState("")
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
-    const [isSubscribed, setIsSubscribed] = useState(null)
+    const [isSubscribed, setIsSubscribed] = useState(null) 
     const user = useSelector((state) => state.auth.userData);
 
 

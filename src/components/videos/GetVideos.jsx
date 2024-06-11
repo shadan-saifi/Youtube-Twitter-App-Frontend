@@ -45,6 +45,8 @@ function GetVideos({ username = null }) {
     const [totalVideoCount, setTotalVideoCount] = useState("")
     const siblingCount = 1;
     const [loading, setLoading] = useState(false)
+    const [activeCommentIndex, setActiveCommentIndex] = useState(null);
+
 
     const navigate = useNavigate()
 
@@ -54,14 +56,14 @@ function GetVideos({ username = null }) {
                 sortBy: z.string().min(1, "This field is required"),
                 sortType: z.string().min(1, "This field is required"),
                 limit: z.number().int().min(1, "This field is required"),
-                isPublished: z.boolean().optional()
+                isPublished: z.string().optional()
             })
         ),
         defaultValues: {
             sortBy: "title",
             sortType: "asc",
             limit: "4",
-            isPublished: true
+            isPublished: "true"
         }
     })
 
@@ -222,7 +224,7 @@ function GetVideos({ username = null }) {
                             render={({ field }) => (
                                 <FormItem>
                                     <div className="flex flex-row justify-start items-center max-w-64">
-                                        <FormLabel className="w-24">Sort Type</FormLabel>
+                                        <FormLabel className="w-24">Publication status</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger>
@@ -232,8 +234,8 @@ function GetVideos({ username = null }) {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     {/* <SelectLabel>Sort By</SelectLabel> */}
-                                                    <SelectItem value={true}>Published</SelectItem>
-                                                    <SelectItem value={false}>Unpublished</SelectItem>
+                                                    <SelectItem value="true">Published</SelectItem>
+                                                    <SelectItem value="false">Unpublished</SelectItem>
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
@@ -246,9 +248,9 @@ function GetVideos({ username = null }) {
             </Form>
             {error && <p className="text-red-600 m-3 p-3 text-center">{error}</p>}
 
-            <div className=" grid grid-flow-row sm:grid-cols-2 md:grid-cols-4 grid-cols-1 gap-4 my-16">
+            <div className=" grid grid-flow-row sm:grid-cols-2 lg:grid-cols-4 grid-cols-1 gap-4 my-16">
                 {allVideos && allVideos?.data?.videos && allVideos?.data?.videos?.length !== 0 ?
-                    (allVideos?.data?.videos?.map((videoDetails) => (
+                    (allVideos?.data?.videos?.map((videoDetails, index) => (
                         <div key={videoDetails?._id} className="sm:max-w-72 hover:scale-[1.01] ">
                             <Link to={`/watch?v=${encodeURIComponent(videoDetails?._id)}`}>
 
@@ -268,18 +270,19 @@ function GetVideos({ username = null }) {
                                                 <AvatarImage src={videoDetails?.ownerOfVideo?.avatar?.secure_url} />
                                                 <AvatarFallback>CN</AvatarFallback>
                                             </Avatar>
-
                                         </div>
                                     ) : null
                                 }
                                 <div className="grow">
                                     <div className="flex flex-row justify-between items-center space-x-4 pt-2">
-                                        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight px-2">
+                                        <h4 className="scroll-m-20 lg:text-xl sm:text-lg text-base font-semibold tracking-tight px-2 max-w-32 text-ellipsis text-wrap">
                                             {videoDetails?.title}
                                         </h4>
-                                            <div className="">
-                                            <AddToPlaylist />
+                                        {
+                                            authStatus && <div className="" onClick={() => setActiveCommentIndex(index === activeCommentIndex ? null : index)}>
+                                                <AddToPlaylist setActiveCommentIndex={setActiveCommentIndex} activeCommentIndex={activeCommentIndex} index={index} videoId={videoDetails?._id} />
                                             </div>
+                                        }
                                     </div>
                                     {
                                         username === null ? (
@@ -300,7 +303,6 @@ function GetVideos({ username = null }) {
                 }
             </div>
             <div className="bg-red-600 p-1 text-white flex flex-row justify-center items-center">
-
                 {currentPage && <Pagination
                     onPageChange={handlePageChange}
                     totalCount={totalVideoCount}

@@ -123,7 +123,7 @@ function VideoComments({ videoId }) {
                     allComments?.length !== 0 ? (
                         <>
                             <div className='h-full' >
-                                {allComments?.map((comment, index) => (
+                                {allComments?.map((comment, index) => ( 
                                     <div key={index} >
                                         <div ref={deleteCommentsRef} className='flex flex-row justify-between items-center my-4'>
                                             <GetVideoComment comment={comment} setError={setError} commentId={(activeCommentIndex === index && activeUpdate) ? comment?._id : null} setAddComment={setAddComment} videoCommentRef={videoCommentRef} textareaClicked={textareaClicked} setTextareaClicked={setTextareaClicked} setActiveCommentIndex={setActiveCommentIndex} setAllComments={setAllComments} />
