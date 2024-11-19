@@ -78,7 +78,7 @@ function Header() {
     return (
         <header >
 
-            <Menubar className="flex flex-row justify-between items-center bg-gradient-to-r from-cyan-300 to-blue-300 rounded-lg p-2 dark:from-gray-500 dark:to-gray-300 sm:h-16 h-12 w-full">
+            <Menubar className="flex flex-row justify-between items-center bg-gradient-to-r from-black to-gray-800 rounded-lg p-2 px-8 dark:from-gray-900 dark:to-gray-700 sm:h-16 h-12 w-full text-white">
                 <MenubarMenu>
                     <div className="flex-auto max-w-[120px] sm:mr-12 mr-8">
                         <Link to="/">
@@ -116,8 +116,8 @@ function Header() {
                     <MenubarMenu>
                         <MenubarTrigger>
                             <div>
-                                <VideoIcon className="sm:w-8 sm:h-8  text-red-600" />
-                                <span className="sm:text-sm text-xs font-extralight text-red-600 text-center">Upload</span>
+                                <VideoIcon className="sm:w-8 sm:h-8  text-white " />
+                                <span className="sm:text-sm text-xs font-extralight text-white text-center">Upload</span>
                             </div>
                         </MenubarTrigger>
                         <MenubarContent>

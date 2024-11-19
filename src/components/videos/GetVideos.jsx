@@ -121,206 +121,203 @@ function GetVideos({ username = null }) {
     }, [username, currentPage, query, watchFields().sortBy, watchFields().sortType, watchFields().limit, watchFields().isPublished]);
 
     return !loading ? (
-        <div>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(() => { })} className={`${username === null ? `bg-gray-50 mt-8 rounded-xl` : null} flex sm:flex-row flex-col sm:justify-around justify-center items-center shadow-md p-1 sm:space-x-4 space-y-2 max-w-full  dark:bg-transparent`}  >
-                    <FormField
-                        control={form.control}
-                        name="sortBy"
-                        render={({ field }) => (
-                            <FormItem>
-                                <div className="flex flex-row justify-start items-center max-w-64">
-                                    <FormLabel className="w-24">Sort By</FormLabel>
-                                    <Select
-                                        onValueChange={field.onChange} defaultValue={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a value to display" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                {/* <SelectLabel>Sort By</SelectLabel> */}
-                                                <SelectItem value="title" >Title</SelectItem>
-                                                <SelectItem value="description">Description</SelectItem>
-                                                <SelectItem value="duration">Duration</SelectItem>
-                                                <SelectItem value="views">Views</SelectItem>
-                                                <SelectItem value="createdAt">Upload Date</SelectItem>
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="sortType"
-                        render={({ field }) => (
-                            <FormItem>
-                                <div className="flex flex-row justify-start items-center max-w-64">
-                                    <FormLabel className="w-24">Sort Type</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a value to display" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                {/* <SelectLabel>Sort By</SelectLabel> */}
-                                                <SelectItem value="asc" >Ascending</SelectItem>
-                                                <SelectItem value="desc">Descending</SelectItem>
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="limit"
-                        render={({ field }) => (
-                            <FormItem>
-                                <div className="flex flex-row justify-start items-center max-w-64">
-                                    <FormLabel className="w-24">Limit</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a value to display" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                {/* <SelectLabel>Sort By</SelectLabel> */}
-                                                <SelectItem value="1">1</SelectItem>
-                                                <SelectItem value="2">2</SelectItem>
-                                                <SelectItem value="3">3</SelectItem>
-                                                <SelectItem value="4">4</SelectItem>
-                                                <SelectItem value="5">5</SelectItem>
-                                                <SelectItem value="6">6</SelectItem>
-                                                <SelectItem value="8">8</SelectItem>
-                                                <SelectItem value="10">10</SelectItem>
-                                                <SelectItem value="15">15</SelectItem>
-                                                <SelectItem value="20">20</SelectItem>
-                                                <SelectItem value="30">30</SelectItem>
-                                                <SelectItem value="40">40</SelectItem>
-                                                <SelectItem value="50">50</SelectItem>
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    {authStatus && username !== null && user?.data?.username === username &&
-                        <FormField
-                            control={form.control}
-                            name="isPublished"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <div className="flex flex-row justify-start items-center max-w-64">
-                                        <FormLabel className="w-24">Publication status</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select a value to display" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    {/* <SelectLabel>Sort By</SelectLabel> */}
-                                                    <SelectItem value="true">Published</SelectItem>
-                                                    <SelectItem value="false">Unpublished</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />}
-                </form>
-            </Form>
-            {error && <p className="text-red-600 m-3 p-3 text-center">{error}</p>}
-
-            <div className=" grid grid-flow-row sm:grid-cols-2 lg:grid-cols-4 grid-cols-1 gap-4 my-16">
-                {allVideos && allVideos?.data?.videos && allVideos?.data?.videos?.length !== 0 ?
-                    (allVideos?.data?.videos?.map((videoDetails, index) => (
-                        <div key={videoDetails?._id} className="sm:max-w-72 hover:scale-[1.01] ">
-                            <Link to={`/watch?v=${encodeURIComponent(videoDetails?._id)}`}>
-
-                                <div className="relative">
-                                    <img src={videoDetails?.thumbnail?.url} alt={videoDetails?.title}
-                                        className="rounded-2xl aspect-video object-cover"
-                                    />
-                                    <span className="absolute right-3 bottom-1 text-lg text-white px-1  bg-gray-600 bg-opacity-70 rounded-md">
-                                        {handleDuration(videoDetails?.duration)}</span>
-                                </div>
-                            </Link>
-                            <div className="px-1 pb-2 flex flex-row justify-start items-center">
-                                {
-                                    username === null ? (
-                                        <div className="active:scale-95" onClick={() => navigate(`/${videoDetails?.ownerOfVideo?.username}/videos`)}>
-                                            <Avatar className="max-w-[120px] h-14 w-14">
-                                                <AvatarImage src={videoDetails?.ownerOfVideo?.avatar?.secure_url} />
-                                                <AvatarFallback>CN</AvatarFallback>
-                                            </Avatar>
-                                        </div>
-                                    ) : null
-                                }
-                                <div className="grow">
-                                    <div className="flex flex-row justify-between items-center space-x-4 pt-2">
-                                        <h4 className="scroll-m-20 lg:text-xl sm:text-lg text-base font-semibold tracking-tight px-2 max-w-32 text-ellipsis text-wrap">
-                                            {videoDetails?.title}
-                                        </h4>
-                                        {
-                                            authStatus && <div className="" onClick={() => setActiveCommentIndex(index === activeCommentIndex ? null : index)}>
-                                                <AddToPlaylist setActiveCommentIndex={setActiveCommentIndex} activeCommentIndex={activeCommentIndex} index={index} videoId={videoDetails?._id} />
-                                            </div>
-                                        }
-                                    </div>
-                                    {
-                                        username === null ? (
-                                            <div onClick={() => navigate(`/${videoDetails?.ownerOfVideo?.username}/videos`)}>
-                                                <div className=" text-md text-left px-2 hover:bg-slate-100 rounded">{videoDetails?.ownerOfVideo?.fullname}</div>
-                                            </div>
-                                        ) : null
-                                    }
-                                    <div className="px-2 pb-2 flex flex-row justify-between items-center w-full text-sm">
-                                        <div>{handleViews(videoDetails?.views)}</div>
-                                        <div>{handleUploadDate(videoDetails?.createdAt)}</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>))
-                    ) : (<div>{"No videos to show"}</div>)
-                }
-            </div>
-            <div className="bg-red-600 p-1 text-white flex flex-row justify-center items-center">
-                {currentPage && <Pagination
-                    onPageChange={handlePageChange}
-                    totalCount={totalVideoCount}
-                    siblingCount={siblingCount}
-                    currentPage={currentPage}
-                    pageSize={videoPerPage}
-                />}
-            </div>
+        <div className="p-4 sm:p-6 lg:p-8 dark:bg-gray-900 dark:text-white">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(() => {})}
+              className={`${
+                username === null ? `bg-gray-50 dark:bg-gray-800 mt-8 rounded-xl` : null
+              } flex flex-col sm:flex-row sm:justify-between justify-center items-center shadow-xl p-4 sm:space-x-6 space-y-4 max-w-full dark:bg-transparent dark:text-white`}
+            >
+              <FormField
+                control={form.control}
+                name="sortBy"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex flex-row justify-between items-center w-64 sm:w-72">
+                      <FormLabel className="w-28 text-sm font-medium dark:text-gray-300">Sort By</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a value" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="title">Title</SelectItem>
+                            <SelectItem value="description">Description</SelectItem>
+                            <SelectItem value="duration">Duration</SelectItem>
+                            <SelectItem value="views">Views</SelectItem>
+                            <SelectItem value="createdAt">Upload Date</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="sortType"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex flex-row justify-between items-center w-64 sm:w-72">
+                      <FormLabel className="w-28 text-sm font-medium dark:text-gray-300">Sort Type</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a value" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="asc">Ascending</SelectItem>
+                            <SelectItem value="desc">Descending</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="limit"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex flex-row justify-between items-center w-64 sm:w-72">
+                      <FormLabel className="w-28 text-sm font-medium dark:text-gray-300">Limit</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a value" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="1">1</SelectItem>
+                            <SelectItem value="2">2</SelectItem>
+                            <SelectItem value="3">3</SelectItem>
+                            <SelectItem value="5">5</SelectItem>
+                            <SelectItem value="10">10</SelectItem>
+                            <SelectItem value="20">20</SelectItem>
+                            <SelectItem value="50">50</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {authStatus && username !== null && user?.data?.username === username && (
+                <FormField
+                  control={form.control}
+                  name="isPublished"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex flex-row justify-between items-center w-64 sm:w-72">
+                        <FormLabel className="w-28 text-sm font-medium dark:text-gray-300">Publication Status</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectItem value="true">Published</SelectItem>
+                              <SelectItem value="false">Unpublished</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+            </form>
+          </Form>
+      
+          {error && <p className="text-red-600 m-4 text-center text-lg font-semibold">{error}</p>}
+      
+          <div className="grid grid-flow-row sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 my-16">
+            {allVideos && allVideos?.data?.videos?.length > 0 ? (
+              allVideos?.data?.videos?.map((videoDetails, index) => (
+                <div key={videoDetails?._id} className="max-w-xs sm:max-w-md hover:scale-105 transition-transform duration-300 dark:hover:scale-105">
+                  <Link to={`/watch?v=${encodeURIComponent(videoDetails?._id)}`}>
+                    <div className="relative overflow-hidden rounded-xl">
+                      <img
+                        src={videoDetails?.thumbnail?.url}
+                        alt={videoDetails?.title}
+                        className="rounded-xl aspect-video object-cover transition-all duration-300"
+                      />
+                      <span className="absolute right-3 bottom-2 text-lg text-white px-2 py-1 bg-gray-800 bg-opacity-70 rounded-md">
+                        {handleDuration(videoDetails?.duration)}
+                      </span>
+                    </div>
+                  </Link>
+                  <div className="px-2 py-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-100 truncate">{videoDetails?.title}</h4>
+                      {authStatus && (
+                        <div className="text-sm" onClick={() => setActiveCommentIndex(index === activeCommentIndex ? null : index)}>
+                          <AddToPlaylist
+                            setActiveCommentIndex={setActiveCommentIndex}
+                            activeCommentIndex={activeCommentIndex}
+                            index={index}
+                            videoId={videoDetails?._id}
+                          />
+                        </div>
+                      )}
+                    </div>
+                    {username === null && (
+                      <div className="mt-2">
+                        <div
+                          className="text-sm font-medium text-gray-600 hover:text-gray-800 cursor-pointer dark:text-gray-300 dark:hover:text-white"
+                          onClick={() => navigate(`/${videoDetails?.ownerOfVideo?.username}/videos`)}
+                        >
+                          {videoDetails?.ownerOfVideo?.fullname}
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex justify-between text-sm text-gray-500 mt-2 dark:text-gray-400">
+                      <div>{handleViews(videoDetails?.views)}</div>
+                      <div>{handleUploadDate(videoDetails?.createdAt)}</div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center text-lg font-semibold text-gray-600 dark:text-gray-400">No videos to show</div>
+            )}
+          </div>
+      
+          <div className="flex justify-center py-4 bg-gray-800 text-white dark:bg-gray-700 dark:text-white">
+            {currentPage && (
+              <Pagination
+                onPageChange={handlePageChange}
+                totalCount={totalVideoCount}
+                siblingCount={siblingCount}
+                currentPage={currentPage}
+                pageSize={videoPerPage}
+              />
+            )}
+          </div>
         </div>
-    ) : (
-        <div className=" flex flex-col justify-center items-center w-full h-svh space-y-3">
-            <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-            <div className="space-y-2">
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
-            </div>
+      ) : (
+        <div className="flex flex-col justify-center items-center w-full h-screen space-y-4">
+          <Skeleton className="h-32 w-64 rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-6 w-36" />
+          </div>
         </div>
-    )
+      );
+      
 }
 
 export default GetVideos
