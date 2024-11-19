@@ -50,6 +50,6 @@ export const VideoJS = (props) => {
       <div ref={videoRef} />
     </div>
   );
-}
+} 
 
 export default VideoJS;

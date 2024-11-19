@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { GetPlaylistVideos, VideoById, VideoComments, VideoDescription, VideoDetails } from '../../components';
 import { useSearchParams } from 'react-router-dom';
-import { getVideoById } from '../../services/videoService';
+import { getVideoById, videoViewCount } from '../../services/videoService';
 import { Skeleton } from "@/components/ui/skeleton"
 
 
@@ -16,11 +16,20 @@ function VideoByIdPage(props) {
     const videoId = searchParams.get("v")
     const playlistId = searchParams.get("list")
     const index = searchParams.get("index")
-
     const [videoLoaded, setVideoLoaded] = useState(false);
-
-
-
+     
+    const memoizedVideoViewCount = useCallback(async (videoId) => {
+        try {
+            if (videoId) {
+                const response = await videoViewCount({ videoId });
+                if (response.success === true) {
+                    console.log("response of view count", response);
+                }
+            }
+        } catch (error) {
+            console.error('Error in videoViewCount:', error);
+        }
+    }, [videoId]);
     useEffect(() => {
         ; (async () => {
             if (videoId) {
@@ -63,10 +72,13 @@ function VideoByIdPage(props) {
         )();
     }, [videoId, playlistId, index]);
 
+    useEffect(() => {
+        memoizedVideoViewCount(videoId);
+    }, [videoId]);
+
     return !loading ? (
         <div className='h-full'>
             {error && <p className="text-red-600 m-3 p-3 text-center">{error}</p>}
-
             <div className='h-full'>
                 {
                     videoId && !playlistId ? (

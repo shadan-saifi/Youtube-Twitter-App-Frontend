@@ -150,11 +150,17 @@ async function getSearchedVideos({ page, limit, sortBy, sortType, query, }) {
         })
         return handleResponse(response)
     } catch (error) {
-        console.log("Error while getting seached Video", error);
         throw error
     }
 }
-
+async function videoViewCount({ videoId }) {
+   try{
+      const response = await axios.patch(`/api/v1/videos/view/${videoId}`)
+      return handleResponse(response)
+   }catch(error){
+    throw error
+   }
+}
 export {
     publishVideo,
     getAllUserVideos,
@@ -164,5 +170,6 @@ export {
     togglePublishVideo,
     getUserSearchedVideos,
     getAllVideos, 
-    getSearchedVideos
+    getSearchedVideos,
+    videoViewCount
 }
